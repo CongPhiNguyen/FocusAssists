@@ -1,6 +1,6 @@
-# focus_assists
+# focus_assist
 
-A new Flutter application.
+Phần mềm quản lý thời gian biểu và hỗ trợ tập trung - Focus Assist
 
 ## Getting Started
 
