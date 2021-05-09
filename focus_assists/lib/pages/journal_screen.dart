@@ -73,7 +73,79 @@ class _JournalScreenState extends State<JournalScreen> {
         Padding(
           padding: const EdgeInsets.all(3.0),
           // ignore: missing_required_param
-          child: Container(),
+          child: TableCalendar(
+            firstDay: DateTime.utc(2010, 10, 16),
+            lastDay: DateTime.utc(2030, 3, 14),
+            focusedDay: _focusedDay,
+            calendarFormat: _calendarFormat,
+            selectedDayPredicate: (day) {
+              return isSameDay(_selectedDay, day);
+            },
+            onDaySelected: (selectedDay, focusedDay) {
+              if (!isSameDay(_selectedDay, selectedDay)) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                  if (_selectedDay == DateTime.utc(2021, 4, 25)) {
+                    setState(() {
+                      this.items = items1;
+                    });
+                  } else
+                    setState(() {
+                      this.items = [];
+                    });
+                });
+              }
+            },
+            onFormatChanged: (format) {
+              if (_calendarFormat != format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
+              }
+            },
+            onPageChanged: (focusedDay) {
+              _focusedDay = focusedDay;
+            },
+
+            calendarStyle: CalendarStyle(
+                defaultTextStyle: TextStyle(fontSize: 20),
+                weekendTextStyle: TextStyle(fontSize: 20)),
+
+            // Đây là các dòng chỉnh cái header ở trên của cái lịch
+            headerStyle: HeaderStyle(
+              decoration: BoxDecoration(
+                  color: Colors.cyan,
+                  border: Border.all(color: Colors.white, width: 0),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                  )),
+              titleCentered: true,
+              titleTextStyle: TextStyle(fontSize: 20, color: Colors.white),
+              formatButtonShowsNext: true,
+              formatButtonVisible: false,
+            ),
+
+            ////Chỉnh định dạng của các ngày trong tuần
+            daysOfWeekHeight: 51,
+            daysOfWeekStyle: DaysOfWeekStyle(
+                decoration: BoxDecoration(
+                  color: Color(0xffffffff),
+                ),
+                ////Chỉnh các ngày cuối tuần
+                weekendStyle: TextStyle(
+                  fontSize: 16,
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+
+                ////Chỉnh các ngày trong tuần
+                weekdayStyle: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                )),
+          ),
         ),
         Row(
           children: <Widget>[

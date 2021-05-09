@@ -7,7 +7,6 @@ class ProgressScreen extends StatefulWidget {
 }
 
 class _ProgressScreenState extends State<ProgressScreen> {
-  CalendarController controller = CalendarController();
   @override
   Widget build(BuildContext context) {
     //controller = CalendarController();
@@ -19,10 +18,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
           child: ListView(
             children: <Widget>[
               TableCalendar(
-                initialCalendarFormat: CalendarFormat.month,
-                initialSelectedDay: DateTime.now(),
-                startingDayOfWeek: StartingDayOfWeek.monday,
-                calendarController: controller,
+                calendarFormat: CalendarFormat.month,
+                firstDay: DateTime.utc(2010, 10, 16),
+                lastDay: DateTime.utc(2030, 3, 14),
+                focusedDay: DateTime.now(),
               ),
               Divider(height: 15.0, thickness: 2.0, indent: 0),
               SizedBox(height: 15.0),

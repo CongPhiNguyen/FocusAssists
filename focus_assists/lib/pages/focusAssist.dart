@@ -36,6 +36,7 @@ class _FocusAssistState extends State<FocusAssist> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.white,
         body: widgetOptions.elementAt(selectedIndex),
