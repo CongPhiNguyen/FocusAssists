@@ -29,6 +29,36 @@ class ViewAllActivity extends StatelessWidget {
             backgroundColor: Color(0xffe66771),
           ),
           body: ListView(children: [
+            Container(
+                height: 50,
+                child: Row(children: [
+                  Expanded(
+                    flex: 1,
+                    child: Center(
+                        child:
+                            Text("Thống kê", style: TextStyle(fontSize: 30))),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Center(
+                        child: Text("Ghi chú", style: TextStyle(fontSize: 30))),
+                  )
+                ])),
+            Container(
+                height: 100,
+                child: ListView(
+                    //scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    children: [
+                      Container(
+                        decoration: new BoxDecoration(color: Colors.red),
+                        child: ListTile(
+                          leading: Icon(Icons.fireplace),
+                          title: Text("Streak"),
+                          subtitle: Text('Consecutive days'),
+                        ),
+                      )
+                    ])),
             TableCalendar(
               firstDay: DateTime.utc(2010, 10, 16),
               lastDay: DateTime.utc(2030, 3, 14),
