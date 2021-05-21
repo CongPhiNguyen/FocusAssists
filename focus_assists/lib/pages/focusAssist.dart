@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:focus_assist/pages/progress_screen.dart';
 import 'package:focus_assist/pages/setting_screen.dart';
-
+import 'package:focus_assist/pages/Timer_Screen.dart';
 class FocusAssist extends StatefulWidget {
   @override
   _FocusAssistState createState() => _FocusAssistState();
@@ -10,11 +10,7 @@ class FocusAssist extends StatefulWidget {
 class _FocusAssistState extends State<FocusAssist> {
   int selectedIndex = 4;
   final List<Widget> widgetOptions = <Widget> [
-    Center(
-      child: Text(
-        'Focus Timer',
-      ),
-    ),
+    TimerScreen(value: [0,0,0],),
     Center(
       child: Text(
         'Journal',
@@ -25,11 +21,6 @@ class _FocusAssistState extends State<FocusAssist> {
         'Reward',
       ),
     ),
-    /*Center(
-      child: Text(
-        'Progress',
-      ),
-    ),*/
     ProgressScreen(),
     SettingScreen(),
   ];
