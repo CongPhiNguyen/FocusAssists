@@ -330,7 +330,7 @@ class _JournalScreenState extends State<JournalScreen> {
           // Quăng ra ngoài rồi hẵn xử lý
           flexibleData.add(database[i]);
         } else if (database[i]['LOAIHINH'] == 'Repeating') {
-          int val = int.parse(database[i]['KHOANGTHOIGIAN']);
+          int val = int.parse(database[i]['KHOANGTHOIGIAN'].toString());
           Duration diff = start.difference(_selectedDay);
           if (diff.inDays % val == 0) {
             print(val);
