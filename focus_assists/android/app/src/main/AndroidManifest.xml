@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.focus_assist">
    <application
-        android:label="focus_assist"
+        android:label="Focus assists"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
