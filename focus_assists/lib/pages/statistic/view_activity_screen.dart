@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:focus_assist/pages/edit_activity_screen.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:focus_assist/classes/Data.dart';
+import 'package:focus_assist/pages/statistic/edit_activity_screen.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:focus_assist/classes/DbProvider.dart';
 import 'package:intl/intl.dart';
@@ -21,17 +21,14 @@ class ViewActivity extends StatefulWidget {
 class _ViewActivityState extends State<ViewActivity> {
   String keyname, name;
   final dbHelper = DbProvider.instance;
-  // Các biến dùng trong cái lịch
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
-  DateTime _selectedDay = DateTime.now();
   List<Map<String, dynamic>> database;
   Map<String, double> dataMap = {
-    "Miss": 5,
-    "Done": 20,
+    "Done": 5,
+    "Miss": 20,
   };
   String consecutiveDays;
   String activityStartDay;
+  String des;
   // Các biến dùng để debug
   DateTime startTime;
   String doDays, failDays;
@@ -47,8 +44,8 @@ class _ViewActivityState extends State<ViewActivity> {
   );
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    des = '';
     database = [];
     name = widget.activityName;
     keyname = widget.activityKey;
@@ -81,13 +78,18 @@ class _ViewActivityState extends State<ViewActivity> {
     database = await dbHelper
         .rawQuery('''select * from MUCTIEU where MAMUCTIEU='$key' ''');
     if (database.length > 0) {
-      setState(() {
-        name = database[0]['TENMUCTIEU'];
-        activityStartDay = intToDateTime(database[0]['NGAYBATDAU']).toString();
-        if (activityStartDay.length > 10) {
-          activityStartDay = activityStartDay.substring(0, 10);
-        }
-      });
+      if (this.mounted) {
+        setState(() {
+          des = database[0]['MOTA'];
+          name = database[0]['TENMUCTIEU'];
+          activityStartDay =
+              intToDateTime(database[0]['NGAYBATDAU']).toString();
+          if (activityStartDay.length > 10) {
+            activityStartDay = activityStartDay.substring(0, 10);
+          }
+        });
+      } else
+        return;
     }
 
     // Lấy các ngày đã làm
@@ -100,11 +102,13 @@ class _ViewActivityState extends State<ViewActivity> {
     }
 
     for (int i = 0; i < doneDay.length; i++) {
-      setState(() {
-        listDoneDay.add(intToDateTime(doneDay[i]));
-      });
+      if (this.mounted) {
+        setState(() {
+          listDoneDay.add(intToDateTime(doneDay[i]));
+        });
+      } else
+        return;
     }
-    print('list DoneDay: $listDoneDay');
     // Lấy ngày thực hiện ngày không thực hiện
     if (database.length > 0) {
       // Xử lý trường hợp fixed
@@ -129,6 +133,7 @@ class _ViewActivityState extends State<ViewActivity> {
         // Xử lý vì chuyển từ int nên có thể không đủ 7 chữ số
         while (h.length < 7) {
           h = '0' + h;
+          print('h: $h');
         }
         for (int day = database[0]['NGAYBATDAU'];
             day <= dateTimeToInt(startTime);
@@ -146,20 +151,22 @@ class _ViewActivityState extends State<ViewActivity> {
           } else
             failDay++;
         }
-        setState(() {
-          doDays = doDay.toString();
-          dataMap['Done'] = doDay * 1.0;
-          failDays = failDay.toString();
-          dataMap['Miss'] = failDay * 1.0;
-        });
+        if (this.mounted) {
+          setState(() {
+            doDays = doDay.toString();
+            dataMap['Done'] = doDay * 1.0;
+            failDays = failDay.toString();
+            dataMap['Miss'] = failDay * 1.0;
+          });
+        }
 
         for (int i = 0; i < toDoDays.length; i++) {
-          if (!doneDay.contains(toDoDays[i]))
+          if (!doneDay.contains(toDoDays[i])) if (this.mounted) {
             setState(() {
               listMissDay.add(intToDateTime(toDoDays[i]));
             });
+          }
         }
-        print('list Miss: $listMissDay');
         // Tính streak của fixed
         int conseDays = 0;
         for (int i = toDoDays.length - 1; i >= 0; i--) {
@@ -170,11 +177,13 @@ class _ViewActivityState extends State<ViewActivity> {
             break;
           }
         }
-        setState(() {
-          consecutiveDays = conseDays.toString();
-        });
+        if (this.mounted) {
+          setState(() {
+            consecutiveDays = conseDays.toString();
+          });
+        }
       } else if (database[0]['LOAIHINH'] == 'Repeating') {
-        int cachNgay = int.parse(database[0]['KHOANGTHOIGIAN']);
+        int cachNgay = int.parse(database[0]['KHOANGTHOIGIAN'].toString());
         // List tất cả các ngày cần làm:
         List<int> toDoDays = [];
         for (int day = database[0]['NGAYBATDAU'];
@@ -189,12 +198,23 @@ class _ViewActivityState extends State<ViewActivity> {
           } else
             failDay++;
         }
-        setState(() {
-          doDays = doDay.toString();
-          dataMap['Done'] = doDay * 1.0;
-          failDays = failDay.toString();
-          dataMap['Miss'] = failDay * 1.0;
-        });
+        if (this.mounted) {
+          setState(() {
+            doDays = doDay.toString();
+            dataMap['Done'] = doDay * 1.0;
+            failDays = failDay.toString();
+            dataMap['Miss'] = failDay * 1.0;
+          });
+        }
+        // List tất cả các ngày làm là doneDay, tìm kiếm là ok
+
+        for (int i = 0; i < toDoDays.length; i++) {
+          if (!doneDay.contains(toDoDays[i])) if (this.mounted) {
+            setState(() {
+              listMissDay.add(intToDateTime(toDoDays[i]));
+            });
+          }
+        }
       } else if (database[0]['LOAIHINH'] == 'Flexible') {
         // Đếm từng tuần của flexible
         // Lấy thứ của ngày bắt đầu
@@ -213,34 +233,53 @@ class _ViewActivityState extends State<ViewActivity> {
         int indexThu = daysofWeek.indexOf(thu);
         int times = database[0]['SOLAN'];
         int startDay = database[0]['NGAYBATDAU'];
+
         if (startDay + 6 - indexThu < dateTimeToInt(startTime)) {
+          // Đếm xem thử đã trải qua 1 tuần hay chua rồi mới thực hiện tiếp
+
           int plus = 0, count = 0;
+          List<int> tempMiss = [];
           for (int i = indexThu; i < 7; i++) {
             if (doneDay.contains(startDay + plus)) {
               count++;
+            } else {
+              tempMiss.add(startDay + plus);
             }
             plus++;
           }
           if (count >= times) {
             timesByWeek.add(1);
-          } else
+          } else {
             timesByWeek.add(0);
+            for (int i = 0; i < tempMiss.length; i++) {
+              listMissDay.add(intToDateTime(tempMiss[i]));
+            }
+          }
+
           print(timesByWeek);
           int changeWeek = 0;
           count = 0;
+          tempMiss = [];
           for (int date = startDay + 7 - indexThu;
               date < dateTimeToInt(startTime);
               date++) {
             print('nextWeek');
-            if (doneDay.contains(date)) count++;
+            if (doneDay.contains(date))
+              count++;
+            else
+              tempMiss.add(date);
             changeWeek++;
             if (changeWeek == 7) {
               changeWeek = 0;
               if (count >= times)
                 timesByWeek.add(1);
-              else
+              else {
                 timesByWeek.add(0);
-              //print('count: $count, time: $times');
+                for (int i = 0; i < tempMiss.length; i++) {
+                  listMissDay.add(intToDateTime(tempMiss[i]));
+                }
+                tempMiss = [];
+              }
             }
           }
           int streak = 0;
@@ -252,9 +291,13 @@ class _ViewActivityState extends State<ViewActivity> {
               break;
             }
           }
-          setState(() {
-            consecutiveDays = streak.toString();
-          });
+          if (this.mounted) {
+            setState(() {
+              consecutiveDays = streak.toString();
+            });
+          } else
+            return;
+
           //Đếm số lần fail lần done
           int doDay = 0, failDay = 0;
           for (int i = 0; i < timesByWeek.length; i++) {
@@ -263,48 +306,59 @@ class _ViewActivityState extends State<ViewActivity> {
             } else
               failDay++;
           }
-          setState(() {
-            doDays = doDay.toString();
-            dataMap['Done'] = doDay * 1.0;
-            failDays = failDay.toString();
-            dataMap['Miss'] = failDay * 1.0;
-          });
+          if (this.mounted) {
+            setState(() {
+              doDays = doDay.toString();
+              dataMap['Done'] = doDay * 1.0;
+              failDays = failDay.toString();
+              dataMap['Miss'] = failDay * 1.0;
+            });
+          } else
+            return;
         }
       }
     }
-    setState(() {
-      _markedDateMap.clear();
-    });
-    for (int i = 0; i < listDoneDay.length; i++) {
+    if (this.mounted) {
       setState(() {
-        _markedDateMap.add(
-          listDoneDay[i],
-          new Event(
-            date: listDoneDay[i],
-            title: 'Event 5',
-            icon: _presentIcon(
-              listDoneDay[i].day.toString(),
-            ),
-          ),
-        );
+        _markedDateMap.clear();
       });
+    } else
+      return;
+
+    for (int i = 0; i < listDoneDay.length; i++) {
+      if (this.mounted) {
+        setState(() {
+          _markedDateMap.add(
+            listDoneDay[i],
+            new Event(
+              date: listDoneDay[i],
+              title: 'Event 5',
+              icon: _presentIcon(
+                listDoneDay[i].day.toString(),
+              ),
+            ),
+          );
+        });
+      } else
+        return;
     }
     for (int i = 0; i < listMissDay.length; i++) {
-      setState(() {
-        _markedDateMap.add(
-          listMissDay[i],
-          new Event(
-            date: listMissDay[i],
-            title: 'Event 5',
-            icon: _absentIcon(
-              listMissDay[i].day.toString(),
+      if (this.mounted) {
+        setState(() {
+          _markedDateMap.add(
+            listMissDay[i],
+            new Event(
+              date: listMissDay[i],
+              title: 'Event 5',
+              icon: _absentIcon(
+                listMissDay[i].day.toString(),
+              ),
             ),
-          ),
-        );
-      });
+          );
+        });
+      } else
+        return;
     }
-    print('listDoneDay2: $listDoneDay');
-    print(listMissDay);
   }
 
   void deleteActivity() {
@@ -316,21 +370,24 @@ class _ViewActivityState extends State<ViewActivity> {
 
   static Widget _absentIcon(String day) => CircleAvatar(
         radius: 10,
-        backgroundColor: Colors.red,
+        backgroundColor:
+            (!StaticData.isDarkMode) ? Colors.redAccent[100] : Colors.red[600],
         child: Text(
           day,
           style: TextStyle(
-            color: Colors.black,
+            color: (!StaticData.isDarkMode) ? Colors.black87 : Colors.white,
           ),
         ),
       );
   static Widget _presentIcon(String day) => CircleAvatar(
         radius: 10,
-        backgroundColor: Colors.green,
+        backgroundColor: (!StaticData.isDarkMode)
+            ? Colors.greenAccent[400]
+            : Colors.green[600],
         child: Text(
           day,
           style: TextStyle(
-            color: Colors.black,
+            color: (!StaticData.isDarkMode) ? Colors.black87 : Colors.white,
           ),
         ),
       );
@@ -349,7 +406,7 @@ class _ViewActivityState extends State<ViewActivity> {
             startTime.toString().substring(0, 10),
             style: TextStyle(fontSize: 20),
           ),
-          FlatButton.icon(
+          TextButton.icon(
             icon: Icon(Icons.date_range),
             onPressed: () async {
               await showDatePicker(
@@ -358,9 +415,12 @@ class _ViewActivityState extends State<ViewActivity> {
                       firstDate: DateTime.utc(2020, 1, 1),
                       lastDate: DateTime.utc(2120, 31, 12))
                   .then((date) {
-                setState(() {
-                  if (date != null) startTime = date;
-                });
+                if (this.mounted) {
+                  setState(() {
+                    if (date != null) startTime = date;
+                  });
+                } else
+                  return;
               });
               getData();
             },
@@ -375,30 +435,57 @@ class _ViewActivityState extends State<ViewActivity> {
   Widget build(BuildContext context) {
     cHeight = MediaQuery.of(context).size.height;
     _calendarCarouselNoHeader = CalendarCarousel<Event>(
-      selectedDayButtonColor: Colors.purple,
-      selectedDateTime: _selectedDateTime,
-      targetDateTime: _targetedDateTime,
-      height: cHeight * 0.54,
+      // selectedDayButtonColor: Colors.purple[300],
+      // selectedDateTime: _selectedDateTime,
+      // targetDateTime: _targetedDateTime,
+      firstDayOfWeek: 1,
+      disableDayPressed: true,
+      height: cHeight * 0.58,
+      headerTextStyle: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: (!StaticData.isDarkMode) ? Colors.black87 : Colors.grey[200]),
+      weekdayTextStyle: TextStyle(
+          color: (!StaticData.isDarkMode) ? Colors.black : Colors.white),
+      daysTextStyle: TextStyle(
+          color: (!StaticData.isDarkMode) ? Colors.black : Colors.white),
       weekendTextStyle: TextStyle(
-        color: Colors.red,
+        color: (!StaticData.isDarkMode) ? Colors.black : Colors.white,
       ),
-      selectedDayBorderColor: Colors.black38,
+      todayTextStyle: TextStyle(
+          color: (!StaticData.isDarkMode) ? Colors.black : Colors.white),
+      leftButtonIcon: Padding(
+        padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+        child: Icon(
+          Icons.chevron_left,
+        ),
+      ),
+      rightButtonIcon: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+        child: Icon(
+          Icons.chevron_right,
+        ),
+      ),
+      // selectedDayBorderColor: Colors.blue,
       showOnlyCurrentMonthDate: false,
-      todayButtonColor: Colors.cyan,
+      // todayButtonColor: Colors.cyan,
       markedDatesMap: _markedDateMap,
       markedDateShowIcon: true,
       markedDateIconMaxShown: 1,
       markedDateMoreShowTotal:
           null, // null for not showing hidden events indicator
-      onDayPressed: (date, event) {
-        setState(() {
-          _selectedDateTime = date;
-          _targetedDateTime = date;
-          if (date.year == 2021) {
-            print('Fuck');
-          }
-        });
-      },
+      // onDayPressed: (date, event) {
+      //   if (this.mounted) {
+      //     setState(() {
+      //       _selectedDateTime = date;
+      //       _targetedDateTime = date;
+      //       if (date.year == 2021) {
+      //         print('Fuck');
+      //       }
+      //     });
+      //   } else
+      //     return;
+      // },
       markedDateIconBuilder: (event) {
         return event.icon;
       },
@@ -409,12 +496,18 @@ class _ViewActivityState extends State<ViewActivity> {
         Padding(
           padding: const EdgeInsets.fromLTRB(10, 15, 15, 10),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            //mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              BackButton(),
               SizedBox(
                 width: 20,
               ),
-              Text(name, style: TextStyle(fontSize: 30)),
+              Expanded(
+                  child: Text(
+                name,
+                style: TextStyle(fontSize: 20),
+                overflow: TextOverflow.ellipsis,
+              )),
               SizedBox(
                 width: 20,
               ),
@@ -431,58 +524,70 @@ class _ViewActivityState extends State<ViewActivity> {
                   },
                   child: Icon(Icons.edit)),
               SizedBox(
-                width: 20,
+                width: 25,
               ),
               InkWell(
                   onTap: () async {
                     await showDialog(
                         context: context,
                         builder: (BuildContext context) => AlertDialog(
-                              title: Text("Message"),
+                              title: Text("Confirmation"),
                               content: Text(
-                                  "Are you sure to delete this activity ?"),
+                                  "Are you sure you want to delete this activity?"),
                               actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("No"),
+                                ),
                                 TextButton(
                                   onPressed: () {
                                     Navigator.pop(context);
                                     deleteActivity();
                                   },
                                   child: Text("Yes"),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("No"),
                                 )
                               ],
                             ));
                   },
                   child: Icon(Icons.delete)),
               SizedBox(
-                width: 10,
+                width: 5,
               )
             ],
           ),
         ),
+        Center(
+            child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+          child: Text(
+            des,
+            style: TextStyle(fontSize: 20),
+            softWrap: true,
+          ),
+        )),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
-              height: 100,
+              height: 70,
               child: ListView(
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
                   children: [
                     Container(
-                      width: 300,
+                      width: 250,
                       decoration: new BoxDecoration(
-                          color: Color(0xffebe8e1),
+                          // color: Color(0xffebe8e1),
+                          color: (!StaticData.isDarkMode)
+                              ? Colors.grey[100]
+                              : Colors.grey[800],
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       child: Center(
                         child: ListTile(
                           leading: Icon(
                             Icons.fireplace,
-                            size: 60,
+                            size: 50,
                             color: Color(0xffd40f23),
                           ),
                           title: Text(
@@ -497,9 +602,12 @@ class _ViewActivityState extends State<ViewActivity> {
                       width: 20,
                     ),
                     Container(
-                      width: 300,
+                      width: 250,
                       decoration: new BoxDecoration(
-                          color: Color(0xffebe8e1),
+                          // color: Color(0xffebe8e1),
+                          color: (!StaticData.isDarkMode)
+                              ? Colors.grey[100]
+                              : Colors.grey[800],
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       child: Center(
                         child: ListTile(
@@ -515,16 +623,19 @@ class _ViewActivityState extends State<ViewActivity> {
                       width: 20,
                     ),
                     Container(
-                      width: 300,
+                      width: 250,
                       decoration: new BoxDecoration(
-                          color: Color(0xffebe8e1),
+                          // color: Color(0xffebe8e1),
+                          color: (!StaticData.isDarkMode)
+                              ? Colors.grey[100]
+                              : Colors.grey[800],
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       child: Center(
                         child: ListTile(
                           leading: Icon(Icons.done_outlined,
                               color: Colors.green, size: 50),
                           title: Text(doDays),
-                          subtitle: Text('Done times'),
+                          subtitle: Text('Times completed'),
                         ),
                       ),
                     ),
@@ -532,23 +643,26 @@ class _ViewActivityState extends State<ViewActivity> {
                       width: 20,
                     ),
                     Container(
-                      width: 300,
+                      width: 250,
                       decoration: new BoxDecoration(
-                          color: Color(0xffebe8e1),
+                          // color: Color(0xffebe8e1),
+                          color: (!StaticData.isDarkMode)
+                              ? Colors.grey[100]
+                              : Colors.grey[800],
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       child: Center(
                         child: ListTile(
                           leading:
                               Icon(Icons.block, color: Colors.red, size: 50),
                           title: Text(failDays),
-                          subtitle: Text('Missed Times'),
+                          subtitle: Text('Times missed'),
                         ),
                       ),
                     ),
                   ])),
         ),
         _calendarCarouselNoHeader,
-        SizedBox(height: 30),
+        // SizedBox(height: 30),
         Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -570,6 +684,10 @@ class _ViewActivityState extends State<ViewActivity> {
         PieChart(
           chartRadius: 200,
           dataMap: dataMap,
+          colorList: [
+            Colors.greenAccent[400],
+            Colors.redAccent[100],
+          ],
           chartType: ChartType.disc,
         )
       ])),
