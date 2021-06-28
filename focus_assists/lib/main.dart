@@ -1,6 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:focus_assist/pages/focusAssist.dart';
+import 'package:flutter_config/flutter_config.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+import 'package:focus_assist/classes/Data.dart';
+import 'classes/DbProvider.dart';
+import 'classes/DbProvider.dart';
+import 'classes/DbProvider.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //await FlutterConfig.loadEnvVariables();
+  await Firebase.initializeApp();
+
+  // Map<String, dynamic> row = {
+  //   'DADANGNHAP': 0,
+  //   'MANGUOIDUNG': ''
+  // };
+  //
+  // await DbProvider.instance.insert('THAMSO', row);
+
+  await initAppSetting();
+  await initializeNotification();
+
   runApp(FocusAssist());
 }
+
+Future<void> initAppSetting() async {
+  Database db = await DbProvider.instance.database;
+  List<Map<String, dynamic>> queryRows = await db.query('THAMSO');
+  StaticData.isSignedIn = (queryRows.first['DADANGNHAP'] == 1);
+  StaticData.userID = queryRows.first['MANGUOIDUNG'];
+  if (StaticData.isSignedIn) {
+    queryRows = await DbProvider.instance.rawQuery('''
+                    select * from THONGTINNGUOIDUNG where MANGUOIDUNG = '${StaticData.userID}'
+                    ''');
+    StaticData.isDarkMode = (queryRows.first['DARKMODE'] == 1);
+    StaticData.isPrivacyLockOn = queryRows.first['PRIVACYLOCK'] == 1;
+  }
+}
+
+void initializeNotification() async {
+  StaticData.flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+// initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+  const AndroidInitializationSettings initializationSettingsAndroid =
+  AndroidInitializationSettings('@mipmap/ic_launcher');
+  final IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings();
+  final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS);
+  await StaticData.flutterLocalNotificationsPlugin.initialize(initializationSettings,);
+}
+
+
+// class FocusAssist extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       title: 'Welcome',
+//       home: WelcomeScreen(),
+//     );
+//   }
+// }
+
