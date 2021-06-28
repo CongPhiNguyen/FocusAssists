@@ -35,6 +35,7 @@ class TimerScreen extends StatefulWidget {
 class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin{
   bool isVisible = true;
   bool isNotVisible = false;
+  // GifController gifcontroller;
   IconData _controlIcon;
   bool timerRunning = false;
 
@@ -226,6 +227,20 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
              ),
             Expanded(
               flex: 4,
+              // child: Container(
+              //   margin: EdgeInsets.only(bottom: 10),
+              //   alignment: Alignment.topCenter,
+              //   height: MediaQuery.of(context).size.height* 0.3,
+              //   width: MediaQuery.of(context).size.width*0.8,
+              //   decoration: BoxDecoration(
+              //     shape: BoxShape.circle,
+              //     //color circle
+              //     color: Colors.blue,
+              //     border: Border.all(
+              //       color: Colors.grey,
+              //       width: 2,
+              //     ),
+              //   ),
                 child: Container(
                   height: MediaQuery.of(context).size.height* 0.8 + 100,
                   width: MediaQuery.of(context).size.width*0.8 + 200,
@@ -273,7 +288,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                               _controlIcon = Icons.pause;           
                               //started? (start()): null;
                               if (started) {
-                                startTimer();
+                                start();
                                 StaticData.gifcontroller.repeat(min:0,max:99,period:Duration(milliseconds: 3000));
                               } else 
                               started = false;
@@ -415,7 +430,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
       });
     }
   @override
-  void startTimer(){
+  void start(){
     setState(() {
       started = false;
       stoped = false;
@@ -437,9 +452,11 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
             _controlIcon = Icons.play_arrow;
             StaticData.focusTimerIsRunning = false;
             control.audioPlayer.pause();
+            // gifcontroller.repeat(min:0,max:0,period:Duration(milliseconds: 1));
             updateGold(reward);
             _showSuccess(this.context, " \n + $reward gold");
-            StaticData.gifcontroller.reset();
+            StaticData.gifcontroller.repeat(min:0,max:0,period:Duration(milliseconds: 1));
+            StaticData.gifcontroller.stop();
             updateHistories(true, "00:10:00");
             checkThanhTuu();
           }
@@ -484,7 +501,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
     });
   }
   // hàm reset
-  void restartTimer(){
+  void restart(){
     setState(() {
       started = true;
       stoped = true;
@@ -588,8 +605,11 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                 onPressed: () {
                       checkThanhTuu();
                       if(!stoped) stop();
-                      StaticData.gifcontroller.reset();
+                      StaticData.gifcontroller.repeat(min:0,max:0,period:Duration(milliseconds: 1));
+                      StaticData.gifcontroller.stop();
                         _controlIcon = Icons.play_arrow;
+                      // duration = timetoDisplay;  
+                      // print(timetoDisplay);
                       updateHistories(false, "00:10:00");
                       control.audioPlayer.pause();
                       Navigator.of(context).pop();

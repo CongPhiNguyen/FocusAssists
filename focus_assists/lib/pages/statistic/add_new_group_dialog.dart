@@ -43,9 +43,7 @@ class _AddGroupState extends State<AddGroup> {
   Widget build(BuildContext context) {
     OutlineInputBorder k = OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(4)),
-      borderSide: BorderSide(
-          width: 1,
-          color: (!StaticData.isDarkMode) ? Colors.black : Colors.grey),
+      borderSide: BorderSide(width: 1, color: (!StaticData.isDarkMode)?Colors.black:Colors.grey),
     );
     return Dialog(
         shape:
@@ -73,36 +71,29 @@ class _AddGroupState extends State<AddGroup> {
                     focusedErrorBorder: k,
                     border: OutlineInputBorder(),
                     labelText: 'Group Name',
-                    labelStyle: TextStyle(
-                        fontSize: 20,
-                        color: (!StaticData.isDarkMode)
-                            ? Colors.black
-                            : Colors.grey[400])),
-                style: TextStyle(
-                  fontSize: 20,
+                    labelStyle: TextStyle(fontSize: 20, color: (!StaticData.isDarkMode)?Colors.black:Colors.grey[400])
                 ),
+                style: TextStyle(fontSize: 20, ),
               ),
             ),
             (isOK)
                 ? SizedBox()
                 : Center(
                     child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-                    child: Text(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                      child: Text(
                       error,
                       style: TextStyle(color: Colors.red, fontSize: 20),
-                    ),
-                  )),
+                  ),
+                    )),
             SizedBox(
               height: 10,
             ),
             Container(
               padding: EdgeInsets.fromLTRB(15, 10, 10, 10),
               decoration: BoxDecoration(
-                  // color: Color(0xffe0e6ee),
-                  color: (!StaticData.isDarkMode)
-                      ? Colors.grey[200]
-                      : Colors.grey[700],
+                // color: Color(0xffe0e6ee),
+                color: (!StaticData.isDarkMode)?Colors.grey[200]:Colors.grey[700],
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10),
@@ -125,9 +116,7 @@ class _AddGroupState extends State<AddGroup> {
                   }
                 },
                 child: Text('Create',
-                    style: TextStyle(
-                      fontSize: 20,
-                    )),
+                    style: TextStyle(fontSize: 20, )),
               ),
             ),
             SizedBox(
