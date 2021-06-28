@@ -51,7 +51,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   CalendarFormat.month: 'Month',
                 },
                 onFormatChanged: (format) {
-                  if(this.mounted) {
+                  if (this.mounted) {
                     setState(() {
                       _calendarFormat = format;
                     });
@@ -210,7 +210,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 //   ),
                 //   Divider(height: 5.0, thickness: 2.0, indent: 0),
                 // ],
-                children: (activitiesWidgetList == null)?[]:activitiesWidgetList,
+                children:
+                    (activitiesWidgetList == null) ? [] : activitiesWidgetList,
               ),
             ],
           ),
@@ -233,18 +234,22 @@ class _ProgressScreenState extends State<ProgressScreen> {
     List<Widget> widgetList = [];
     DateTime firstDay, lastDay, previousFirstDay, previousLastDay;
     if (_calendarFormat == CalendarFormat.week) {
-      firstDay = currentDayTime.subtract(Duration(days: currentDayTime.weekday - 1));
+      firstDay =
+          currentDayTime.subtract(Duration(days: currentDayTime.weekday - 1));
       firstDay = new DateTime(firstDay.year, firstDay.month, firstDay.day);
       lastDay = firstDay.add(Duration(days: 6));
       previousFirstDay = firstDay.subtract(Duration(days: 7));
       previousLastDay = lastDay.subtract(Duration(days: 7));
-    }
-    else if (_calendarFormat == CalendarFormat.month) {
-      firstDay = currentDayTime.subtract(Duration(days: currentDayTime.day - 1));
+    } else if (_calendarFormat == CalendarFormat.month) {
+      firstDay =
+          currentDayTime.subtract(Duration(days: currentDayTime.day - 1));
       firstDay = new DateTime(firstDay.year, firstDay.month, firstDay.day);
-      lastDay = firstDay.add(Duration(days: NumberOfDaysInMonth(currentDayTime.month, currentDayTime.year) - 1));
+      lastDay = firstDay.add(Duration(
+          days: NumberOfDaysInMonth(currentDayTime.month, currentDayTime.year) -
+              1));
       previousLastDay = firstDay.subtract(Duration(days: 1));
-      previousFirstDay = previousLastDay.subtract(Duration(days: previousLastDay.day - 1));
+      previousFirstDay =
+          previousLastDay.subtract(Duration(days: previousLastDay.day - 1));
     }
     print('firstDay: $firstDay');
     print('lastDay: $lastDay');
@@ -286,12 +291,24 @@ class _ProgressScreenState extends State<ProgressScreen> {
       // }
       // print(activitiesDataListBool);
       if (DateTimeToInt(lastDay) < activitiesList[i]['NGAYBATDAU']) continue;
-      List<bool> activityDataListBool = await GetActivityListBool(activitiesList[i], firstDay, lastDay);
-      List<bool> previousActivityListBool = await GetActivityListBool(activitiesList[i], previousFirstDay, previousLastDay);
+      List<bool> activityDataListBool =
+          await GetActivityListBool(activitiesList[i], firstDay, lastDay);
+      List<bool> previousActivityListBool = await GetActivityListBool(
+          activitiesList[i], previousFirstDay, previousLastDay);
 
       ListTile listTile = new ListTile(
-        title: Text('${activitiesList[i]['TENMUCTIEU'].toString()}', overflow: TextOverflow.ellipsis,),
-        trailing: _getActivityDetail(activitiesList[i], activityDataListBool, previousActivityListBool, firstDay, lastDay, previousFirstDay, previousLastDay),
+        title: Text(
+          '${activitiesList[i]['TENMUCTIEU'].toString()}',
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: _getActivityDetail(
+            activitiesList[i],
+            activityDataListBool,
+            previousActivityListBool,
+            firstDay,
+            lastDay,
+            previousFirstDay,
+            previousLastDay),
       );
       Divider divider = new Divider(
         height: 10.0,
@@ -301,7 +318,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
       widgetList.add(listTile);
       widgetList.add(divider);
 
-      List<int> activityCompleteMissCount = GetActivityCompletedMissedCount(activitiesList[i], activityDataListBool, firstDay, lastDay);
+      List<int> activityCompleteMissCount = GetActivityCompletedMissedCount(
+          activitiesList[i], activityDataListBool, firstDay, lastDay);
       print('Activity: ${activitiesList[i]['TENMUCTIEU']}');
       print('ActivityCompletedCount: ${activityCompleteMissCount[0]}');
       print('ActivityMissedCount: ${activityCompleteMissCount[1]}');
@@ -313,13 +331,20 @@ class _ProgressScreenState extends State<ProgressScreen> {
         activitiesWidgetList = widgetList;
         totalActivityCompletedCount = totalCompleted;
         totalActivityMissedCount = totalMissed;
-        overallPercentage = ((totalCompleted + totalMissed) != 0)?((totalActivityCompletedCount.toDouble() / (totalActivityMissedCount + totalActivityCompletedCount).toDouble() * 100).round()):100;
+        overallPercentage = ((totalCompleted + totalMissed) != 0)
+            ? ((totalActivityCompletedCount.toDouble() /
+                    (totalActivityMissedCount + totalActivityCompletedCount)
+                        .toDouble() *
+                    100)
+                .round())
+            : 100;
       });
       print('End LoadActivitiesList');
     }
   }
 
-  Future<List<bool>> GetActivityListBool(Map<String, dynamic> activity, DateTime firstDay, DateTime lastDay) async {
+  Future<List<bool>> GetActivityListBool(Map<String, dynamic> activity,
+      DateTime firstDay, DateTime lastDay) async {
     print('element: $activity');
     Database activityData = await DbProvider.instance.database;
 
@@ -331,13 +356,18 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
     print('WhereArgs: $whereArgs');
 
-    List<Map<String, dynamic>> activitiesDataList = await activityData.query('THONGKE',
-        where: 'MAMUCTIEU = ? AND NGAYHOANTHANH >= ? AND NGAYHOANTHANH <= ?', whereArgs: whereArgs);
+    List<Map<String, dynamic>> activitiesDataList = await activityData.query(
+        'THONGKE',
+        where: 'MAMUCTIEU = ? AND NGAYHOANTHANH >= ? AND NGAYHOANTHANH <= ?',
+        whereArgs: whereArgs);
     print('activitiesDataList: $activitiesDataList');
 
     List<bool> activitiesDataListBool = [];
-    print('NumberOfDaysInMonth: ${NumberOfDaysInMonth(firstDay.month, firstDay.year)}');
-    int boolListLength = (_calendarFormat == CalendarFormat.week)?7:NumberOfDaysInMonth(firstDay.month, firstDay.year);
+    print(
+        'NumberOfDaysInMonth: ${NumberOfDaysInMonth(firstDay.month, firstDay.year)}');
+    int boolListLength = (_calendarFormat == CalendarFormat.week)
+        ? 7
+        : NumberOfDaysInMonth(firstDay.month, firstDay.year);
     print('boolListLength: $boolListLength');
     for (int i = 0; i < boolListLength; i++) {
       activitiesDataListBool.add(false);
@@ -346,18 +376,42 @@ class _ProgressScreenState extends State<ProgressScreen> {
     for (int i = 0; i < activitiesDataList.length; i++) {
       DateTime dateTime = IntToDateTime(activitiesDataList[i]['NGAYHOANTHANH']);
       print('dateTime: $dateTime');
-      if (_calendarFormat == CalendarFormat.week) activitiesDataListBool[dateTime.difference(firstDay).inDays] = true;
-      else if (_calendarFormat == CalendarFormat.month) activitiesDataListBool[dateTime.day - 1] = true;
+      if (_calendarFormat == CalendarFormat.week)
+        activitiesDataListBool[dateTime.difference(firstDay).inDays] = true;
+      else if (_calendarFormat == CalendarFormat.month)
+        activitiesDataListBool[dateTime.day - 1] = true;
     }
     print(activitiesDataListBool);
     return activitiesDataListBool;
   }
 
-  Widget _getActivityDetail(Map<String, dynamic> activity, List<bool> completedDayList, List<bool> previousCompledtedDayList, DateTime firstDay, DateTime lastDay, DateTime previousFirstDay, DateTime previousLastDay) {
+  Widget _getActivityDetail(
+      Map<String, dynamic> activity,
+      List<bool> completedDayList,
+      List<bool> previousCompledtedDayList,
+      DateTime firstDay,
+      DateTime lastDay,
+      DateTime previousFirstDay,
+      DateTime previousLastDay) {
     if (dropdownValue == 1) {
-      if (_calendarFormat == CalendarFormat.week) return ActivityWeeklyPercentage(activity, completedDayList, previousCompledtedDayList, firstDay, lastDay, previousFirstDay, previousLastDay);
+      if (_calendarFormat == CalendarFormat.week)
+        return ActivityWeeklyPercentage(
+            activity,
+            completedDayList,
+            previousCompledtedDayList,
+            firstDay,
+            lastDay,
+            previousFirstDay,
+            previousLastDay);
       else if (_calendarFormat == CalendarFormat.month) {
-        return ActivityMonthlyPercentage(activity, completedDayList, previousCompledtedDayList, firstDay, lastDay, previousFirstDay, previousLastDay);
+        return ActivityMonthlyPercentage(
+            activity,
+            completedDayList,
+            previousCompledtedDayList,
+            firstDay,
+            lastDay,
+            previousFirstDay,
+            previousLastDay);
         // return Row(
         //   mainAxisSize: MainAxisSize.min,
         //   children: <Widget>[
@@ -380,12 +434,14 @@ class _ProgressScreenState extends State<ProgressScreen> {
     } else if (dropdownValue == 2) {
       if (_calendarFormat == CalendarFormat.week) {
         return ActivityWeeklyProgressCalendar(completedDayList, 12);
-      }
-      else if (_calendarFormat == CalendarFormat.month) return ActivityMonthlyProgressCalendar(completedDayList);
-    };
+      } else if (_calendarFormat == CalendarFormat.month)
+        return ActivityMonthlyProgressCalendar(completedDayList);
+    }
+    ;
   }
 
-  Widget ActivityWeeklyProgressCalendar(List<bool> completedDayList, double boxSize) {
+  Widget ActivityWeeklyProgressCalendar(
+      List<bool> completedDayList, double boxSize) {
     Row row = new Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[],
@@ -396,14 +452,17 @@ class _ProgressScreenState extends State<ProgressScreen> {
         sizedBox = new SizedBox(
           height: boxSize,
           width: boxSize,
-          child: Container(color: Colors.blue[300],),
+          child: Container(
+            color: Colors.blue[300],
+          ),
         );
-      }
-      else {
+      } else {
         sizedBox = new SizedBox(
           height: boxSize,
           width: boxSize,
-          child: Container(color: Colors.grey[200],),
+          child: Container(
+            color: Colors.grey[200],
+          ),
         );
       }
       row.children.add(sizedBox);
@@ -411,7 +470,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
     return Wrap(
       children: <Widget>[
         SizedBox(
-          width: (completedDayList.length == 7)?110:(completedDayList.length * boxSize + (completedDayList.length - 1) * 2),
+          width: (completedDayList.length == 7)
+              ? 110
+              : (completedDayList.length * boxSize +
+                  (completedDayList.length - 1) * 2),
           child: row,
         ),
       ],
@@ -641,14 +703,25 @@ class _ProgressScreenState extends State<ProgressScreen> {
     return 28;
   }
 
-  Widget ActivityWeeklyPercentage(Map<String, dynamic> activity, List<bool> completedDayList, List<bool> previousCompletedDayList, DateTime firstDay, DateTime lastDay, DateTime previousFirstDay, DateTime previousLastDay) {
-    int weekPercentage = CalculateActivityWeekPercentage(activity, completedDayList, firstDay, lastDay);
+  Widget ActivityWeeklyPercentage(
+      Map<String, dynamic> activity,
+      List<bool> completedDayList,
+      List<bool> previousCompletedDayList,
+      DateTime firstDay,
+      DateTime lastDay,
+      DateTime previousFirstDay,
+      DateTime previousLastDay) {
+    int weekPercentage = CalculateActivityWeekPercentage(
+        activity, completedDayList, firstDay, lastDay);
     int previousWeekPercentage;
-    if ((DateTimeToInt(currentDayTime) > DateTimeToInt(DateTime.now()))
-        || (DateTimeToInt(currentDayTime) <= DateTimeToInt(IntToDateTime(activity['NGAYBATDAU']).add(Duration(days: 7 - IntToDateTime(activity['NGAYBATDAU']).weekday))))) {
+    if ((DateTimeToInt(currentDayTime) > DateTimeToInt(DateTime.now())) ||
+        (DateTimeToInt(currentDayTime) <=
+            DateTimeToInt(IntToDateTime(activity['NGAYBATDAU']).add(Duration(
+                days: 7 - IntToDateTime(activity['NGAYBATDAU']).weekday))))) {
       previousWeekPercentage = -1;
-    }
-    else previousWeekPercentage = CalculateActivityWeekPercentage(activity, previousCompletedDayList, previousFirstDay, previousLastDay);
+    } else
+      previousWeekPercentage = CalculateActivityWeekPercentage(activity,
+          previousCompletedDayList, previousFirstDay, previousLastDay);
     print('weekPercentage: $weekPercentage');
     print('previousWeekPercentage: $previousWeekPercentage');
 
@@ -663,8 +736,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
     if (previousWeekPercentage != -1) {
       Icon icon = new Icon(
-        (weekPercentage >= previousWeekPercentage)?Icons.arrow_drop_up:Icons.arrow_drop_down,
-        color: (weekPercentage >= previousWeekPercentage)?Colors.green:Colors.red,
+        (weekPercentage >= previousWeekPercentage)
+            ? Icons.arrow_drop_up
+            : Icons.arrow_drop_down,
+        color: (weekPercentage >= previousWeekPercentage)
+            ? Colors.green
+            : Colors.red,
         size: 24.0,
       );
       SizedBox sizedBox = new SizedBox(
@@ -672,35 +749,46 @@ class _ProgressScreenState extends State<ProgressScreen> {
         child: Text(
           '$previousWeekPercentage%',
           style: TextStyle(
-            color: (weekPercentage >= previousWeekPercentage)?Colors.green:Colors.red,
+            color: (weekPercentage >= previousWeekPercentage)
+                ? Colors.green
+                : Colors.red,
           ),
         ),
       );
       row.children.add(icon);
       row.children.add(sizedBox);
-    }
-    else {
-      SizedBox emptySizedBox = new SizedBox(width: 20,);
+    } else {
+      SizedBox emptySizedBox = new SizedBox(
+        width: 20,
+      );
       row.children.add(emptySizedBox);
     }
 
     return row;
   }
 
-  int CalculateActivityWeekPercentage(Map<String, dynamic> activity, List<bool> completedDayList, DateTime firstDay, DateTime lastDay) {
+  int CalculateActivityWeekPercentage(Map<String, dynamic> activity,
+      List<bool> completedDayList, DateTime firstDay, DateTime lastDay) {
     int percentage;
     // if ((_calendarFormat == CalendarFormat.week) && (DateTimeToInt(currentDayTime) > DateTimeToInt(DateTime.now().add(Duration(days: 7 - DateTime.now().weekday))))) {
     //   return 0;
     // }
-    List<int> activityCompletedMissedCount = GetActivityCompletedMissedCount(activity, completedDayList, firstDay, lastDay);
+    List<int> activityCompletedMissedCount = GetActivityCompletedMissedCount(
+        activity, completedDayList, firstDay, lastDay);
     int activityCompletedCount = activityCompletedMissedCount[0];
     int activityMissedCount = activityCompletedMissedCount[1];
-    if (activityCompletedCount + activityMissedCount != 0) percentage = ((activityCompletedCount.toDouble() / (activityCompletedCount + activityMissedCount).toDouble()) * 100).round();
-    else percentage = 100;
+    if (activityCompletedCount + activityMissedCount != 0)
+      percentage = ((activityCompletedCount.toDouble() /
+                  (activityCompletedCount + activityMissedCount).toDouble()) *
+              100)
+          .round();
+    else
+      percentage = 100;
     return percentage;
   }
 
-  List<int> GetActivityCompletedMissedCount(Map<String, dynamic> activity, List<bool> completedDayList, DateTime firstDay, DateTime lastDay) {
+  List<int> GetActivityCompletedMissedCount(Map<String, dynamic> activity,
+      List<bool> completedDayList, DateTime firstDay, DateTime lastDay) {
     List<int> listInt = [];
     int activityDayCount = 0;
     int activityCompletedCount = 0;
@@ -711,11 +799,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
       //   activityDayCount = 0;
       //   activityCompletedCount = 0;
       // }
-      if (DateTimeToInt(currentDayTime) < DateTimeToInt(IntToDateTime(activity['NGAYBATDAU']).subtract(Duration(days: IntToDateTime(activity['NGAYBATDAU']).weekday - 1)))) {
+      if (DateTimeToInt(currentDayTime) <
+          DateTimeToInt(IntToDateTime(activity['NGAYBATDAU']).subtract(Duration(
+              days: IntToDateTime(activity['NGAYBATDAU']).weekday - 1)))) {
         activityDayCount = 0;
         activityCompletedCount = 0;
-      }
-      else {
+      } else {
         if (activity['LOAIHINH'] == 'Fixed') {
           String activityDayString = activity['CACNGAY'].toString();
           //DateTime firstDayOfWeek = currentDayTime.subtract(Duration(days: currentDayTime.weekday - 1));
@@ -723,31 +812,32 @@ class _ProgressScreenState extends State<ProgressScreen> {
             for (int i = 0; i < activityDayString.length; i++) {
               if (activityDayString[i] == '1') activityDayCount++;
             }
-          }
-          else {
+          } else {
             DateTime startDay = IntToDateTime(activity['NGAYBATDAU']);
             int startWeekday = startDay.weekday - 1;
             for (int i = startWeekday; i < activityDayString.length; i++) {
               if (activityDayString[i] == '1') activityDayCount++;
             }
           }
-        }
-        else if (activity['LOAIHINH'] == 'Flexible') {
+        } else if (activity['LOAIHINH'] == 'Flexible') {
           // DateTime firstDayOfWeek = currentDayTime.subtract(Duration(days: currentDayTime.weekday - 1));
-          if (DateTimeToInt(firstDay) >= activity['NGAYBATDAU']) activityDayCount = activity['SOLAN'];
+          if (DateTimeToInt(firstDay) >= activity['NGAYBATDAU'])
+            activityDayCount = activity['SOLAN'];
           else {
             DateTime startDay = IntToDateTime(activity['NGAYBATDAU']);
-            activityDayCount = (((7 - startDay.weekday + 1).toDouble() / 7.0) * activity['SOLAN']).floor();
+            activityDayCount = (((7 - startDay.weekday + 1).toDouble() / 7.0) *
+                    activity['SOLAN'])
+                .floor();
           }
-
-        }
-        else if (activity['LOAIHINH'] == 'Repeating') {
+        } else if (activity['LOAIHINH'] == 'Repeating') {
           // DateTime dateTime = currentDayTime.add(Duration(days: 7 - currentDayTime.weekday));
           // dateTime = new DateTime(dateTime.year, dateTime.month, dateTime.day);
-          int dayDifference = lastDay.difference(IntToDateTime(activity['NGAYBATDAU'])).inDays;
+          int dayDifference =
+              lastDay.difference(IntToDateTime(activity['NGAYBATDAU'])).inDays;
           dayDifference = dayDifference % activity['KHOANGTHOIGIAN'];
           if (dayDifference < 7) {
-            DateTime weekLastCompletedDay = lastDay.subtract(Duration(days: dayDifference));
+            DateTime weekLastCompletedDay =
+                lastDay.subtract(Duration(days: dayDifference));
             activityDayCount++;
             int weekDay = weekLastCompletedDay.weekday;
             while (weekDay > 1 && weekDay > activity['KHOANGTHOIGIAN']) {
@@ -760,18 +850,18 @@ class _ProgressScreenState extends State<ProgressScreen> {
           if (completedDayList[i] == true) activityCompletedCount++;
         }
       }
-    }
-    else if (_calendarFormat == CalendarFormat.month) {
+    } else if (_calendarFormat == CalendarFormat.month) {
       // if (DateTimeToInt(currentDayTime) < DateTimeToInt(IntToDateTime(activity['NGAYBATDAU']).subtract(Duration(days: IntToDateTime(activity['NGAYBATDAU']).day - 1)))
       //     || DateTimeToInt(currentDayTime) > DateTimeToInt(DateTime.now().add(Duration(days: NumberOfDaysInMonth(DateTime.now().month, DateTime.now().year) - DateTime.now().day)))) {
       //   activityDayCount = 0;
       //   activityCompletedCount = 0;
       // }
-      if (DateTimeToInt(currentDayTime) < DateTimeToInt(IntToDateTime(activity['NGAYBATDAU']).subtract(Duration(days: IntToDateTime(activity['NGAYBATDAU']).day - 1)))) {
+      if (DateTimeToInt(currentDayTime) <
+          DateTimeToInt(IntToDateTime(activity['NGAYBATDAU']).subtract(
+              Duration(days: IntToDateTime(activity['NGAYBATDAU']).day - 1)))) {
         activityDayCount = 0;
         activityCompletedCount = 0;
-      }
-      else {
+      } else {
         if (activity['LOAIHINH'] == 'Fixed') {
           String activityDayString = activity['CACNGAY'].toString();
           // int timesPerWeek = 0;
@@ -781,51 +871,88 @@ class _ProgressScreenState extends State<ProgressScreen> {
           // DateTime firstDayOfMonth = currentDayTime.subtract(Duration(days: currentDayTime.day - 1));
           // DateTime lastDayOfMonth = firstDayOfMonth.add(Duration(days: NumberOfDaysInMonth(firstDayOfMonth.month, firstDayOfMonth.year) - 1));
           DateTime firstDayOfWeek = firstDay;
-          DateTime lastDayOfWeek = firstDayOfWeek.add(Duration(days: 7 - firstDayOfWeek.weekday));
+          DateTime lastDayOfWeek =
+              firstDayOfWeek.add(Duration(days: 7 - firstDayOfWeek.weekday));
 
-          while((DateTimeToInt(lastDayOfWeek) < activity['NGAYBATDAU']) && (DateTimeToInt(lastDayOfWeek) < DateTimeToInt(lastDay))) {
+          while ((DateTimeToInt(lastDayOfWeek) < activity['NGAYBATDAU']) &&
+              (DateTimeToInt(lastDayOfWeek) < DateTimeToInt(lastDay))) {
             lastDayOfWeek = lastDayOfWeek.add(Duration(days: 7));
-            if (DateTimeToInt(lastDayOfWeek) > DateTimeToInt(lastDay)) lastDayOfWeek = lastDay;
-            firstDayOfWeek = lastDayOfWeek.subtract(Duration(days: lastDayOfWeek.weekday - 1));
+            if (DateTimeToInt(lastDayOfWeek) > DateTimeToInt(lastDay))
+              lastDayOfWeek = lastDay;
+            firstDayOfWeek = lastDayOfWeek
+                .subtract(Duration(days: lastDayOfWeek.weekday - 1));
           }
-          while(DateTimeToInt(lastDayOfWeek) <= DateTimeToInt(lastDay)) {
-            for (int i = firstDayOfWeek.weekday - 1; i < lastDayOfWeek.weekday; i++) {
+          while (DateTimeToInt(lastDayOfWeek) <= DateTimeToInt(lastDay)) {
+            for (int i = firstDayOfWeek.weekday - 1;
+                i < lastDayOfWeek.weekday;
+                i++) {
               if (activityDayString[i] == '1') activityDayCount++;
             }
             lastDayOfWeek = lastDayOfWeek.add(Duration(days: 7));
-            firstDayOfWeek = lastDayOfWeek.subtract(Duration(days: lastDayOfWeek.weekday - 1));
+            firstDayOfWeek = lastDayOfWeek
+                .subtract(Duration(days: lastDayOfWeek.weekday - 1));
           }
           if (DateTimeToInt(firstDayOfWeek) <= DateTimeToInt(lastDay)) {
-            if (DateTimeToInt(lastDayOfWeek) > DateTimeToInt(lastDay)) lastDayOfWeek = lastDay;
-            for (int i = firstDayOfWeek.weekday - 1; i < lastDayOfWeek.weekday; i++) {
+            if (DateTimeToInt(lastDayOfWeek) > DateTimeToInt(lastDay))
+              lastDayOfWeek = lastDay;
+            for (int i = firstDayOfWeek.weekday - 1;
+                i < lastDayOfWeek.weekday;
+                i++) {
               if (activityDayString[i] == '1') activityDayCount++;
             }
           }
-        }
-        else if (activity['LOAIHINH'] == 'Flexible') {
+        } else if (activity['LOAIHINH'] == 'Flexible') {
           // DateTime firstDayOfMonth = currentDayTime.subtract(Duration(days: currentDayTime.day - 1));
-          if (DateTimeToInt(firstDay) >= activity['NGAYBATDAU']) activityDayCount = ((NumberOfDaysInMonth(firstDay.month, firstDay.year).toDouble() / 7.0) * activity['SOLAN']).floor();
+          if (DateTimeToInt(firstDay) >= activity['NGAYBATDAU'])
+            activityDayCount =
+                ((NumberOfDaysInMonth(firstDay.month, firstDay.year)
+                                .toDouble() /
+                            7.0) *
+                        activity['SOLAN'])
+                    .floor();
           else {
             DateTime startDay = IntToDateTime(activity['NGAYBATDAU']);
-            activityDayCount = (((NumberOfDaysInMonth(firstDay.month, firstDay.year) - startDay.day + 1).toDouble() / 7.0) * activity['SOLAN']).floor();
+            activityDayCount =
+                (((NumberOfDaysInMonth(firstDay.month, firstDay.year) -
+                                    startDay.day +
+                                    1)
+                                .toDouble() /
+                            7.0) *
+                        activity['SOLAN'])
+                    .floor();
           }
-        }
-        else if (activity['LOAIHINH'] == 'Repeating') {
+        } else if (activity['LOAIHINH'] == 'Repeating') {
           // DateTime firstDayOfMonth = currentDayTime.subtract(Duration(days: currentDayTime.day - 1));
           // firstDayOfMonth = new DateTime(firstDayOfMonth.year, firstDayOfMonth.month, firstDayOfMonth.day);
 
           if (DateTimeToInt(firstDay) >= activity['NGAYBATDAU']) {
-            int dayDifference = firstDay.difference(IntToDateTime(activity['NGAYBATDAU'])).inDays;
+            int dayDifference = firstDay
+                .difference(IntToDateTime(activity['NGAYBATDAU']))
+                .inDays;
             dayDifference = dayDifference % activity['KHOANGTHOIGIAN'];
             DateTime firstActivityDay;
-            if (dayDifference > 0) firstActivityDay = firstDay.add(Duration(days: activity['KHOANGTHOIGIAN'] - dayDifference));
-            else firstActivityDay = firstDay;
-            activityDayCount = ((NumberOfDaysInMonth(firstDay.month, firstDay.year) - firstActivityDay.day).toDouble() / activity['KHOANGTHOIGIAN']).floor() + 1;
-          }
-          else {
+            if (dayDifference > 0)
+              firstActivityDay = firstDay.add(
+                  Duration(days: activity['KHOANGTHOIGIAN'] - dayDifference));
+            else
+              firstActivityDay = firstDay;
+            activityDayCount =
+                ((NumberOfDaysInMonth(firstDay.month, firstDay.year) -
+                                    firstActivityDay.day)
+                                .toDouble() /
+                            activity['KHOANGTHOIGIAN'])
+                        .floor() +
+                    1;
+          } else {
             DateTime firstActivityDay;
             firstActivityDay = IntToDateTime(activity['NGAYBATDAU']);
-            activityDayCount = ((NumberOfDaysInMonth(firstDay.month, firstDay.year) - firstActivityDay.day).toDouble() / activity['KHOANGTHOIGIAN']).floor() + 1;
+            activityDayCount =
+                ((NumberOfDaysInMonth(firstDay.month, firstDay.year) -
+                                    firstActivityDay.day)
+                                .toDouble() /
+                            activity['KHOANGTHOIGIAN'])
+                        .floor() +
+                    1;
           }
         }
         for (int i = 0; i < completedDayList.length; i++) {
@@ -833,7 +960,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
         }
       }
     }
-    if ((activity['LOAIHINH'] == 'Flexible') && activityCompletedCount > activityDayCount ) {
+    if ((activity['LOAIHINH'] == 'Flexible') &&
+        activityCompletedCount > activityDayCount) {
       activityCompletedCount = activityDayCount;
     }
     listInt.add(activityCompletedCount);
@@ -841,15 +969,32 @@ class _ProgressScreenState extends State<ProgressScreen> {
     return listInt;
   }
 
-  Widget ActivityMonthlyPercentage(Map<String, dynamic> activity, List<bool> completedDayList, List<bool> previousCompletedDayList, DateTime firstDay, DateTime lastDay, DateTime previousFirstDay, DateTime previousLastDay) {
-
-    int monthPercentage = CalculateActivityMonthPercentage(activity, completedDayList, firstDay, lastDay);
+  Widget ActivityMonthlyPercentage(
+      Map<String, dynamic> activity,
+      List<bool> completedDayList,
+      List<bool> previousCompletedDayList,
+      DateTime firstDay,
+      DateTime lastDay,
+      DateTime previousFirstDay,
+      DateTime previousLastDay) {
+    int monthPercentage = CalculateActivityMonthPercentage(
+        activity, completedDayList, firstDay, lastDay);
     int previousMonthPercentage;
-    if ((DateTimeToInt(currentDayTime) > DateTimeToInt(DateTime.now().add(Duration(days: NumberOfDaysInMonth(DateTime.now().month, DateTime.now().year) - DateTime.now().day))))
-        || (DateTimeToInt(currentDayTime) <= DateTimeToInt(IntToDateTime(activity['NGAYBATDAU']).add(Duration(days: NumberOfDaysInMonth(IntToDateTime(activity['NGAYBATDAU']).month, IntToDateTime(activity['NGAYBATDAU']).year) - IntToDateTime(activity['NGAYBATDAU']).day))))) {
+    if ((DateTimeToInt(currentDayTime) >
+            DateTimeToInt(DateTime.now().add(Duration(
+                days: NumberOfDaysInMonth(
+                        DateTime.now().month, DateTime.now().year) -
+                    DateTime.now().day)))) ||
+        (DateTimeToInt(currentDayTime) <=
+            DateTimeToInt(IntToDateTime(activity['NGAYBATDAU']).add(Duration(
+                days: NumberOfDaysInMonth(
+                        IntToDateTime(activity['NGAYBATDAU']).month,
+                        IntToDateTime(activity['NGAYBATDAU']).year) -
+                    IntToDateTime(activity['NGAYBATDAU']).day))))) {
       previousMonthPercentage = -1;
-    }
-    else previousMonthPercentage = CalculateActivityMonthPercentage(activity, previousCompletedDayList, previousFirstDay, previousLastDay);
+    } else
+      previousMonthPercentage = CalculateActivityMonthPercentage(activity,
+          previousCompletedDayList, previousFirstDay, previousLastDay);
     print('monthPercentage: $monthPercentage');
     print('previousMonthPercentage: $previousMonthPercentage');
 
@@ -864,8 +1009,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
     if (previousMonthPercentage != -1) {
       Icon icon = new Icon(
-        (monthPercentage >= previousMonthPercentage)?Icons.arrow_drop_up:Icons.arrow_drop_down,
-        color: (monthPercentage >= previousMonthPercentage)?Colors.green:Colors.red,
+        (monthPercentage >= previousMonthPercentage)
+            ? Icons.arrow_drop_up
+            : Icons.arrow_drop_down,
+        color: (monthPercentage >= previousMonthPercentage)
+            ? Colors.green
+            : Colors.red,
         size: 24.0,
       );
       SizedBox sizedBox = new SizedBox(
@@ -873,30 +1022,40 @@ class _ProgressScreenState extends State<ProgressScreen> {
         child: Text(
           '$previousMonthPercentage%',
           style: TextStyle(
-            color: (monthPercentage >= previousMonthPercentage)?Colors.green:Colors.red,
+            color: (monthPercentage >= previousMonthPercentage)
+                ? Colors.green
+                : Colors.red,
           ),
         ),
       );
       row.children.add(icon);
       row.children.add(sizedBox);
-    }
-    else {
-      SizedBox emptySizedBox = new SizedBox(width: 20,);
+    } else {
+      SizedBox emptySizedBox = new SizedBox(
+        width: 20,
+      );
       row.children.add(emptySizedBox);
     }
     return row;
   }
 
-  int CalculateActivityMonthPercentage(Map<String, dynamic> activity, List<bool> completedDayList, DateTime firstDay, DateTime lastDay) {
+  int CalculateActivityMonthPercentage(Map<String, dynamic> activity,
+      List<bool> completedDayList, DateTime firstDay, DateTime lastDay) {
     int percentage;
     // if ((_calendarFormat == CalendarFormat.month) && (DateTimeToInt(currentDayTime) > DateTimeToInt(DateTime.now().add(Duration(days: NumberOfDaysInMonth(DateTime.now().month, DateTime.now().year) - DateTime.now().day))))) {
     //   return 0;
     // }
-    List<int> activityCompletedMissedCount = GetActivityCompletedMissedCount(activity, completedDayList, firstDay, lastDay);
+    List<int> activityCompletedMissedCount = GetActivityCompletedMissedCount(
+        activity, completedDayList, firstDay, lastDay);
     int activityCompletedCount = activityCompletedMissedCount[0];
     int activityMissedCount = activityCompletedMissedCount[1];
-    if (activityCompletedCount + activityMissedCount != 0) percentage = ((activityCompletedCount.toDouble() / (activityCompletedCount + activityMissedCount).toDouble()) * 100).round();
-    else percentage = 100;
+    if (activityCompletedCount + activityMissedCount != 0)
+      percentage = ((activityCompletedCount.toDouble() /
+                  (activityCompletedCount + activityMissedCount).toDouble()) *
+              100)
+          .round();
+    else
+      percentage = 100;
     return percentage;
   }
 
@@ -910,5 +1069,4 @@ class _ProgressScreenState extends State<ProgressScreen> {
     int day = dateTimeInt % 100;
     return DateTime(year, month, day);
   }
-
 }

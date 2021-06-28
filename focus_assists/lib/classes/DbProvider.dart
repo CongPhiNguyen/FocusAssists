@@ -30,7 +30,11 @@ class DbProvider {
   Future _onCreate(Database db, int version) async {
     print('onCreate');
     String script =
+<<<<<<< HEAD
+        await rootBundle.loadString('assets/create_tables_script.sql');
+=======
         await rootBundle.loadString('assets/Database/create_tables_script.sql');
+>>>>>>> f7230508b5a57cf5af8488a6cc178bb0b8e2a279
     print('LoadString');
     List<String> scripts = script.split(";");
     scripts.forEach((element) {
@@ -39,6 +43,8 @@ class DbProvider {
         db.execute(element.trim());
       }
     });
+<<<<<<< HEAD
+=======
   }
 
   Future<List<Map>> rawQuery(String query) async {
@@ -50,6 +56,7 @@ class DbProvider {
   Future<int> deleteTable(String tableName) async {
     Database db = await instance.database;
     return await db.delete(tableName);
+>>>>>>> f7230508b5a57cf5af8488a6cc178bb0b8e2a279
   }
 
   Future<int> insert(String tableName, Map<String, dynamic> row) async {
@@ -64,9 +71,23 @@ class DbProvider {
     );
   }
 
+<<<<<<< HEAD
+  Future<List<Map>> rawQuery(String query) async {
+    Database db = await instance.database;
+    List<Map> res = await db.rawQuery(query);
+    return res;
+=======
   Future<int> update(String tableName, Map<String, dynamic> row, String key,
       String arg) async {
     Database db = await instance.database;
+    return await db.update(tableName, row, where: '$key = ?', whereArgs: [arg]);
+>>>>>>> f7230508b5a57cf5af8488a6cc178bb0b8e2a279
+  }
+
+  Future<int> update(String tableName, Map<String, dynamic> row, String key,
+      String arg) async {
+    Database db = await instance.database;
+<<<<<<< HEAD
     return await db.update(tableName, row, where: '$key = ?', whereArgs: [arg]);
   }
 
@@ -74,4 +95,8 @@ class DbProvider {
     Database db = await instance.database;
     return await db.delete(tableName, where: '$key = ?', whereArgs: [arg]);
   }
+=======
+    return await db.delete(tableName, where: '$key = ?', whereArgs: [arg]);
+  }
+>>>>>>> f7230508b5a57cf5af8488a6cc178bb0b8e2a279
 }
