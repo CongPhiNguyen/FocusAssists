@@ -698,7 +698,6 @@ class _AddNewState extends State<AddNew> {
                         builder: (_) => AddGroup(),
                       );
                       await getAllGroup();
-                      print(l);
                       if (l != null && l == true) {
                         if (this.mounted) {
                           setState(() {
