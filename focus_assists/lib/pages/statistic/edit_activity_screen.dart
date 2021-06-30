@@ -411,7 +411,7 @@ class _EditActivityState extends State<EditActivity> {
       } else {
         int days = int.parse(getRepeatingDay.text);
         if (days < 1) {
-          showDialog(
+          await showDialog(
               context: context,
               builder: (BuildContext context) => AlertDialog(
                     title: Text("Message"),
@@ -419,7 +419,7 @@ class _EditActivityState extends State<EditActivity> {
                     actions: [
                       TextButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.pop(context, false);
                         },
                         child: Text("OK"),
                       )
