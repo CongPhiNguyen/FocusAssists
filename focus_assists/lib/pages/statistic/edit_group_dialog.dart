@@ -51,11 +51,9 @@ class _EditGroupState extends State<EditGroup> {
 
   @override
   Widget build(BuildContext context) {
-    OutlineInputBorder borderStyle = OutlineInputBorder(
+    OutlineInputBorder k = OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(4)),
-      borderSide: BorderSide(
-          width: 1,
-          color: (!StaticData.isDarkMode) ? Colors.black : Colors.grey),
+      borderSide: BorderSide(width: 1, color: (!StaticData.isDarkMode)?Colors.black:Colors.grey),
     );
     return Dialog(
         shape:
@@ -77,21 +75,16 @@ class _EditGroupState extends State<EditGroup> {
                 decoration: InputDecoration(
                     isDense: true,
                     contentPadding: EdgeInsets.all(18),
-                    focusedBorder: borderStyle,
-                    disabledBorder: borderStyle,
-                    enabledBorder: borderStyle,
-                    errorBorder: borderStyle,
-                    focusedErrorBorder: borderStyle,
+                    focusedBorder: k,
+                    disabledBorder: k,
+                    enabledBorder: k,
+                    errorBorder: k,
+                    focusedErrorBorder: k,
                     border: OutlineInputBorder(),
                     labelText: 'Group Name',
-                    labelStyle: TextStyle(
-                        fontSize: 20,
-                        color: (!StaticData.isDarkMode)
-                            ? Colors.black
-                            : Colors.grey[400])),
-                style: TextStyle(
-                  fontSize: 20,
+                    labelStyle: TextStyle(fontSize: 20, color: (!StaticData.isDarkMode)?Colors.black:Colors.grey[400])
                 ),
+                style: TextStyle(fontSize: 20,),
               ),
             ),
             (isOK)
@@ -108,9 +101,8 @@ class _EditGroupState extends State<EditGroup> {
               width: 100,
               padding: EdgeInsets.fromLTRB(15, 10, 10, 10),
               decoration: BoxDecoration(
-                  color: (!StaticData.isDarkMode)
-                      ? Colors.grey[200]
-                      : Colors.grey[700],
+                  // color: Color(0xffe0e6ee),
+                  color: (!StaticData.isDarkMode)?Colors.grey[200]:Colors.grey[700],
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10),
@@ -134,9 +126,7 @@ class _EditGroupState extends State<EditGroup> {
                 },
                 child: Center(
                   child: Text('Finish',
-                      style: TextStyle(
-                        fontSize: 20,
-                      )),
+                      style: TextStyle(fontSize: 20,)),
                 ),
               ),
             ),

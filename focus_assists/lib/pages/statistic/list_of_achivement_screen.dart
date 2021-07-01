@@ -41,6 +41,7 @@ class _ListAchivementState extends State<ListAchivement> {
   }
 
   Future<int> getCurrentActivityLevel() async {
+    //int levelNow = (doneNum / 75).round();
     int countDatabaseLevel = 0;
     String key = StaticData.userID;
     List<Map<String, dynamic>> data = await dbHelper.rawQuery(
@@ -234,6 +235,7 @@ class _ListAchivementState extends State<ListAchivement> {
     print('inserted row id: $id2');
 
     int golds = StaticData.Vang += 20;
+    //Add vàng vào database
     String userKey = StaticData.userID;
     dbHelper.rawQuery(
         ''' update THONGTINNGUOIDUNG set VANG=$golds where MANGUOIDUNG='$userKey' ''');
@@ -269,7 +271,7 @@ class _ListAchivementState extends State<ListAchivement> {
               Center(
                 child: Row(mainAxisSize: MainAxisSize.min, children: [
                   Expanded(
-                      flex: 5,
+                      flex: 4,
                       child: Center(
                         child: Text("Done $currentDoneTarget times",
                             style: TextStyle(fontSize: 20)),
@@ -278,6 +280,7 @@ class _ListAchivementState extends State<ListAchivement> {
                     flex: 4,
                     child: LinearPercentIndicator(
                       center: Text('$doneNum/$currentDoneTarget'),
+                      //width: 100.0,
                       lineHeight: 14.0,
                       percent: (percentDone > 1) ? 1.0 : percentDone,
                       backgroundColor: (!StaticData.isDarkMode)
@@ -317,9 +320,9 @@ class _ListAchivementState extends State<ListAchivement> {
               Center(
                 child: Row(mainAxisSize: MainAxisSize.min, children: [
                   Expanded(
-                      flex: 5,
+                      flex: 4,
                       child: Center(
-                        child: Text("Have 75 activities",
+                        child: Text("Have $currentActivityTarget activities",
                             style: TextStyle(fontSize: 20)),
                       )),
                   Expanded(
