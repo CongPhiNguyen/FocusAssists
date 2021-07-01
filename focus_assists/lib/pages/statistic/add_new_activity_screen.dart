@@ -76,37 +76,41 @@ class _AddNewState extends State<AddNew> {
                 softWrap: true,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 8, 8),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 50,
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      controller: getDayPerWeek,
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        hintText: 'days',
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 8, 8, 8),
+                child: Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 50,
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          controller: getDayPerWeek,
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                            hintText: 'days',
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                          ),
+                          style: TextStyle(fontSize: 20),
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
                         ),
                       ),
-                      style: TextStyle(fontSize: 20),
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                    ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text("per week", style: TextStyle(fontSize: 20))
+                    ],
                   ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text("per week", style: TextStyle(fontSize: 20))
-                ],
+                ),
               ),
             ),
           ],
@@ -152,6 +156,8 @@ class _AddNewState extends State<AddNew> {
                             width: 48.5,
                             decoration: BoxDecoration(
                               color: checkDay[index]
+                                  // ? Color(0xff8A2BE2)
+                                  // : Color(0xffF0FFF0),
                                   ? (!StaticData.isDarkMode)
                                       ? Colors.grey[50]
                                       : Colors.grey[700]
@@ -168,6 +174,21 @@ class _AddNewState extends State<AddNew> {
                                             ? Colors.blue
                                             : Colors.grey[500],
                                     width: 5),
+                                // top: BorderSide(
+                                //     color: !checkDay[index]
+                                //         ? (!StaticData.isDarkMode)?Colors.blue:Colors.grey[700]
+                                //         : (!StaticData.isDarkMode)?Colors.grey[200]:Colors.grey[500],
+                                //     width: 1),
+                                // right: BorderSide(
+                                //     color: !checkDay[index]
+                                //         ? (!StaticData.isDarkMode)?Colors.blue:Colors.grey[700]
+                                //         : (!StaticData.isDarkMode)?Colors.grey[200]:Colors.grey[500],
+                                //     width: 1),
+                                // left: BorderSide(
+                                //     color: !checkDay[index]
+                                //         ? (!StaticData.isDarkMode)?Colors.blue:Colors.grey[700]
+                                //         : (!StaticData.isDarkMode)?Colors.grey[200]:Colors.grey[500],
+                                //     width: (index == 0) ? 1 : 0)
                               ),
                             ),
                             child: Center(
@@ -175,6 +196,8 @@ class _AddNewState extends State<AddNew> {
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: !checkDay[index]
+                                        // ? Color(0xff8A2BE2)
+                                        // : Color(0xffF0FFF0))
                                         ? Colors.black
                                         : Colors.black,
                                   )),
@@ -281,7 +304,7 @@ class _AddNewState extends State<AddNew> {
           builder: (BuildContext context) => AlertDialog(
                 title: Text("Message"),
                 content:
-                    Text("Are you sure not to add description to activity ?"),
+                    Text("Are you sure you don't want to add description?"),
                 actions: [
                   TextButton(
                     onPressed: () {
@@ -496,7 +519,7 @@ class _AddNewState extends State<AddNew> {
 
   @override
   Widget build(BuildContext context) {
-    OutlineInputBorder borderStyle = OutlineInputBorder(
+    OutlineInputBorder k = OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(4)),
       borderSide: BorderSide(
           width: 1,
@@ -564,18 +587,25 @@ class _AddNewState extends State<AddNew> {
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
                           alignLabelWithHint: true,
+                          border: OutlineInputBorder(
+                              // borderRadius: BorderRadius.circular(8.0),
+                              // borderSide: BorderSide(
+                              //   color: Colors.black,
+                              // ),
+                              ),
                           labelText: 'Activity Name',
                           labelStyle: TextStyle(
                               color: (!StaticData.isDarkMode)
                                   ? Colors.black
                                   : Colors.grey[400],
                               fontSize: 18),
-                          focusedBorder: borderStyle,
-                          disabledBorder: borderStyle,
-                          enabledBorder: borderStyle,
-                          errorBorder: borderStyle,
-                          focusedErrorBorder: borderStyle,
+                          focusedBorder: k,
+                          disabledBorder: k,
+                          enabledBorder: k,
+                          errorBorder: k,
+                          focusedErrorBorder: k,
                         ),
+                        // style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
                       SizedBox(
                         height: 10,
@@ -586,11 +616,17 @@ class _AddNewState extends State<AddNew> {
                         decoration: InputDecoration(
                             isDense: true,
                             contentPadding: EdgeInsets.all(8),
-                            focusedBorder: borderStyle,
-                            disabledBorder: borderStyle,
-                            enabledBorder: borderStyle,
-                            errorBorder: borderStyle,
-                            focusedErrorBorder: borderStyle,
+                            focusedBorder: k,
+                            disabledBorder: k,
+                            enabledBorder: k,
+                            errorBorder: k,
+                            focusedErrorBorder: k,
+                            border: OutlineInputBorder(
+                                // borderRadius: BorderRadius.circular(8.0),
+                                // borderSide: BorderSide(
+                                //   color: Colors.grey,
+                                // ),
+                                ),
                             labelText: 'Description (optional)',
                             labelStyle: TextStyle(
                                 color: (!StaticData.isDarkMode)
@@ -598,6 +634,7 @@ class _AddNewState extends State<AddNew> {
                                     : Colors.grey[400],
                                 fontSize: 18)),
                         maxLines: 3,
+                        // style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
                       SizedBox(
                         height: 10,
@@ -698,6 +735,7 @@ class _AddNewState extends State<AddNew> {
                         builder: (_) => AddGroup(),
                       );
                       await getAllGroup();
+                      print(l);
                       if (l != null && l == true) {
                         if (this.mounted) {
                           setState(() {
@@ -766,6 +804,7 @@ class _AddNewState extends State<AddNew> {
                     : (dropDownValue == 'Flexible')
                         ? Flexible()
                         : Repeating()),
+            //debugWidget(),
           ],
         ));
   }

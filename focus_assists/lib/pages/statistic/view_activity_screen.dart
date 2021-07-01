@@ -133,6 +133,7 @@ class _ViewActivityState extends State<ViewActivity> {
         // Xử lý vì chuyển từ int nên có thể không đủ 7 chữ số
         while (h.length < 7) {
           h = '0' + h;
+          print('h: $h');
         }
         for (int day = database[0]['NGAYBATDAU'];
             day <= dateTimeToInt(startTime);
@@ -171,6 +172,7 @@ class _ViewActivityState extends State<ViewActivity> {
         for (int i = toDoDays.length - 1; i >= 0; i--) {
           if (doneDay.contains(toDoDays[i])) {
             conseDays++;
+            //print(toDoDays[i]);
           } else {
             break;
           }
@@ -253,12 +255,15 @@ class _ViewActivityState extends State<ViewActivity> {
               listMissDay.add(intToDateTime(tempMiss[i]));
             }
           }
+
+          print(timesByWeek);
           int changeWeek = 0;
           count = 0;
           tempMiss = [];
           for (int date = startDay + 7 - indexThu;
               date < dateTimeToInt(startTime);
               date++) {
+            print('nextWeek');
             if (doneDay.contains(date))
               count++;
             else
@@ -467,7 +472,20 @@ class _ViewActivityState extends State<ViewActivity> {
       markedDatesMap: _markedDateMap,
       markedDateShowIcon: true,
       markedDateIconMaxShown: 1,
-      markedDateMoreShowTotal: null,
+      markedDateMoreShowTotal:
+          null, // null for not showing hidden events indicator
+      // onDayPressed: (date, event) {
+      //   if (this.mounted) {
+      //     setState(() {
+      //       _selectedDateTime = date;
+      //       _targetedDateTime = date;
+      //       if (date.year == 2021) {
+      //         print('Fuck');
+      //       }
+      //     });
+      //   } else
+      //     return;
+      // },
       markedDateIconBuilder: (event) {
         return event.icon;
       },
