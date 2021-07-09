@@ -45,6 +45,7 @@ class _ViewActivityState extends State<ViewActivity> {
   @override
   void initState() {
     super.initState();
+    print('view_screen init');
     des = '';
     database = [];
     name = widget.activityName;
@@ -59,6 +60,7 @@ class _ViewActivityState extends State<ViewActivity> {
     _selectedDateTime = DateTime.now();
     _targetedDateTime = DateTime.now();
     markDays();
+    print('end view_screen init');
   }
 
   int dateTimeToInt(DateTime dateTime) {
@@ -93,6 +95,7 @@ class _ViewActivityState extends State<ViewActivity> {
     }
 
     // Lấy các ngày đã làm
+    print('startTime: $startTime');
     int date = dateTimeToInt(startTime);
     List<Map<String, dynamic>> data = await dbHelper.rawQuery(
         '''select * from THONGKE where MAMUCTIEU='$key' and NGAYHOANTHANH<=$date ''');
@@ -133,16 +136,22 @@ class _ViewActivityState extends State<ViewActivity> {
         // Xử lý vì chuyển từ int nên có thể không đủ 7 chữ số
         while (h.length < 7) {
           h = '0' + h;
+          print('h: $h');
         }
+        print('NGAYBATDAU: ${database[0]['NGAYBATDAU']}');
+        print('startTime int: ${dateTimeToInt(startTime)}');
+        int x = 0;
         for (int day = database[0]['NGAYBATDAU'];
             day <= dateTimeToInt(startTime);
-            day++) {
+            day = dateTimeToInt(intToDateTime(day).add(Duration(days: 1)))) {
+          x++;
           if (h[indexThu] == '1') {
             toDoDays.add(day);
           }
           indexThu++;
           indexThu %= 7;
         }
+        print('x: $x');
         int doDay = 0, failDay = 0;
         for (int i = 0; i < toDoDays.length; i++) {
           if (doneDay.contains(toDoDays[i])) {
@@ -171,6 +180,7 @@ class _ViewActivityState extends State<ViewActivity> {
         for (int i = toDoDays.length - 1; i >= 0; i--) {
           if (doneDay.contains(toDoDays[i])) {
             conseDays++;
+            //print(toDoDays[i]);
           } else {
             break;
           }
@@ -186,7 +196,8 @@ class _ViewActivityState extends State<ViewActivity> {
         List<int> toDoDays = [];
         for (int day = database[0]['NGAYBATDAU'];
             day <= dateTimeToInt(startTime);
-            day += cachNgay) {
+            day = dateTimeToInt(
+                intToDateTime(day).add(Duration(days: cachNgay)))) {
           toDoDays.add(day);
         }
         int doDay = 0, failDay = 0;
@@ -232,16 +243,20 @@ class _ViewActivityState extends State<ViewActivity> {
         int times = database[0]['SOLAN'];
         int startDay = database[0]['NGAYBATDAU'];
 
-        if (startDay + 6 - indexThu < dateTimeToInt(startTime)) {
+        if (dateTimeToInt(
+                intToDateTime(startDay).add((Duration(days: 6 - indexThu)))) <
+            dateTimeToInt(startTime)) {
           // Đếm xem thử đã trải qua 1 tuần hay chua rồi mới thực hiện tiếp
 
           int plus = 0, count = 0;
           List<int> tempMiss = [];
           for (int i = indexThu; i < 7; i++) {
-            if (doneDay.contains(startDay + plus)) {
+            if (doneDay.contains(dateTimeToInt(
+                intToDateTime(startDay).add(Duration(days: plus))))) {
               count++;
             } else {
-              tempMiss.add(startDay + plus);
+              tempMiss.add(dateTimeToInt(
+                  intToDateTime(startDay).add(Duration(days: plus))));
             }
             plus++;
           }
@@ -249,16 +264,24 @@ class _ViewActivityState extends State<ViewActivity> {
             timesByWeek.add(1);
           } else {
             timesByWeek.add(0);
+            print('tempMiss: $tempMiss');
             for (int i = 0; i < tempMiss.length; i++) {
               listMissDay.add(intToDateTime(tempMiss[i]));
             }
           }
+
+          print(timesByWeek);
           int changeWeek = 0;
           count = 0;
           tempMiss = [];
-          for (int date = startDay + 7 - indexThu;
+          for (int date = dateTimeToInt(intToDateTime(startDay)
+                  .add((Duration(days: 7)))
+                  .subtract(Duration(days: indexThu)));
               date < dateTimeToInt(startTime);
-              date++) {
+              date =
+                  dateTimeToInt(intToDateTime(date).add(Duration(days: 1)))) {
+            //print('nextWeek');
+            print('date: $date');
             if (doneDay.contains(date))
               count++;
             else
@@ -270,11 +293,13 @@ class _ViewActivityState extends State<ViewActivity> {
                 timesByWeek.add(1);
               else {
                 timesByWeek.add(0);
+                print('tempMiss: $tempMiss');
                 for (int i = 0; i < tempMiss.length; i++) {
                   listMissDay.add(intToDateTime(tempMiss[i]));
                 }
-                tempMiss = [];
               }
+              count = 0;
+              tempMiss = [];
             }
           }
           int streak = 0;
@@ -305,6 +330,7 @@ class _ViewActivityState extends State<ViewActivity> {
             setState(() {
               doDays = doDay.toString();
               dataMap['Done'] = doDay * 1.0;
+              failDay = failDay * times;
               failDays = failDay.toString();
               dataMap['Miss'] = failDay * 1.0;
             });
@@ -386,7 +412,6 @@ class _ViewActivityState extends State<ViewActivity> {
           ),
         ),
       );
-  CalendarCarousel _calendarCarouselNoHeader;
   void markDays() {}
   Widget debugWidget() {
     return Padding(
@@ -426,52 +451,30 @@ class _ViewActivityState extends State<ViewActivity> {
     );
   }
 
+  Map<String, double> CalculateOverallPercentage(Map<String, double> map) {
+    double donePercentage;
+    double missPercentage;
+    if (map['Done'] == 0) {
+      donePercentage = 0;
+      missPercentage = 100;
+    } else if (map['Miss'] == 0) {
+      donePercentage = 100;
+      missPercentage = 0;
+    } else {
+      donePercentage =
+          (map['Done'] / (map['Done'] + map['Miss']) * 100).roundToDouble();
+      missPercentage = 100.0 - donePercentage;
+    }
+    Map<String, double> percentageMap = {
+      'Done': donePercentage,
+      'Miss': missPercentage,
+    };
+    return percentageMap;
+  }
+
   @override
   Widget build(BuildContext context) {
     cHeight = MediaQuery.of(context).size.height;
-    _calendarCarouselNoHeader = CalendarCarousel<Event>(
-      // selectedDayButtonColor: Colors.purple[300],
-      // selectedDateTime: _selectedDateTime,
-      // targetDateTime: _targetedDateTime,
-      firstDayOfWeek: 1,
-      disableDayPressed: true,
-      height: cHeight * 0.58,
-      headerTextStyle: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: (!StaticData.isDarkMode) ? Colors.black87 : Colors.grey[200]),
-      weekdayTextStyle: TextStyle(
-          color: (!StaticData.isDarkMode) ? Colors.black : Colors.white),
-      daysTextStyle: TextStyle(
-          color: (!StaticData.isDarkMode) ? Colors.black : Colors.white),
-      weekendTextStyle: TextStyle(
-        color: (!StaticData.isDarkMode) ? Colors.black : Colors.white,
-      ),
-      todayTextStyle: TextStyle(
-          color: (!StaticData.isDarkMode) ? Colors.black : Colors.white),
-      leftButtonIcon: Padding(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-        child: Icon(
-          Icons.chevron_left,
-        ),
-      ),
-      rightButtonIcon: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-        child: Icon(
-          Icons.chevron_right,
-        ),
-      ),
-      // selectedDayBorderColor: Colors.blue,
-      showOnlyCurrentMonthDate: false,
-      // todayButtonColor: Colors.cyan,
-      markedDatesMap: _markedDateMap,
-      markedDateShowIcon: true,
-      markedDateIconMaxShown: 1,
-      markedDateMoreShowTotal: null,
-      markedDateIconBuilder: (event) {
-        return event.icon;
-      },
-    );
     return Container(
       child: Scaffold(
           body: ListView(children: [
@@ -643,7 +646,45 @@ class _ViewActivityState extends State<ViewActivity> {
                     ),
                   ])),
         ),
-        _calendarCarouselNoHeader,
+        CalendarCarousel<Event>(
+          firstDayOfWeek: 1,
+          disableDayPressed: true,
+          height: cHeight * 0.58,
+          headerTextStyle: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color:
+                  (!StaticData.isDarkMode) ? Colors.black87 : Colors.grey[200]),
+          weekdayTextStyle: TextStyle(
+              color: (!StaticData.isDarkMode) ? Colors.black : Colors.white),
+          daysTextStyle: TextStyle(
+              color: (!StaticData.isDarkMode) ? Colors.black : Colors.white),
+          weekendTextStyle: TextStyle(
+            color: (!StaticData.isDarkMode) ? Colors.black : Colors.white,
+          ),
+          todayTextStyle: TextStyle(
+              color: (!StaticData.isDarkMode) ? Colors.black : Colors.white),
+          leftButtonIcon: Padding(
+            padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+            child: Icon(
+              Icons.chevron_left,
+            ),
+          ),
+          rightButtonIcon: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+            child: Icon(
+              Icons.chevron_right,
+            ),
+          ),
+          showOnlyCurrentMonthDate: false,
+          markedDatesMap: _markedDateMap,
+          markedDateShowIcon: true,
+          markedDateIconMaxShown: 1,
+          markedDateMoreShowTotal: null,
+          markedDateIconBuilder: (event) {
+            return event.icon;
+          },
+        ),
         // SizedBox(height: 30),
         Padding(
             padding: const EdgeInsets.all(8.0),
@@ -665,7 +706,7 @@ class _ViewActivityState extends State<ViewActivity> {
             )),
         PieChart(
           chartRadius: 200,
-          dataMap: dataMap,
+          dataMap: CalculateOverallPercentage(dataMap),
           colorList: [
             Colors.greenAccent[400],
             Colors.redAccent[100],
