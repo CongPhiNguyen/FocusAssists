@@ -391,7 +391,7 @@ class _EditActivityState extends State<EditActivity> {
               builder: (BuildContext context) => AlertDialog(
                     title: Text("Message"),
                     content: Text(
-                        "Days per week can't greater than 7 or less than 1"),
+                        "Days per week can't be greater than 7 or less than 1"),
                     actions: [
                       TextButton(
                         onPressed: () {
@@ -515,18 +515,15 @@ class _EditActivityState extends State<EditActivity> {
   }
 
   Future<void> getAllGroup() async {
-    List<Map<String, dynamic>> database = await dbHelper.query('NHOMMUCTIEU');
+    String userID = StaticData.userID;
+    List<Map<String, dynamic>> database = await dbHelper
+        .rawQuery('''select * from NHOMMUCTIEU where MANGUOIDUNG='$userID' ''');
     if (this.mounted) {
       setState(() {
         text2 = database.toString();
       });
     } else
       return;
-
-    // setState(() {
-    //   allGroup = [];
-    //   allGroupKey = [];
-    // });
     while (allGroup.length > 1) {
       allGroup.removeLast();
       allGroupKey.removeLast();
@@ -545,6 +542,18 @@ class _EditActivityState extends State<EditActivity> {
       } else
         return;
     }
+  }
+
+  Future<bool> checkUniqueName(String name) async {
+    String userID = StaticData.userID;
+    List<Map<String, dynamic>> database = await dbHelper
+        .rawQuery('''select * from NHOMMUCTIEU where MANGUOIDUNG='$userID' ''');
+    for (int i = 0; i < database.length; i++) {
+      if (database[i]['TENNHOM'] == name) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @override
@@ -626,6 +635,7 @@ class _EditActivityState extends State<EditActivity> {
                       // Description
                       TextField(
                         controller: getDescription,
+                        textInputAction: TextInputAction.done,
                         decoration: InputDecoration(
                             isDense: true,
                             contentPadding: EdgeInsets.all(8),
