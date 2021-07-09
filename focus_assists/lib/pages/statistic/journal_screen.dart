@@ -28,6 +28,8 @@ class _JournalScreenState extends State<JournalScreen> {
   DateTime _selectedDay;
 
   // Các biến để lưu dữ liệu các ngày
+  List<String> items1;
+  List<String> items;
   List<ToDo> toDos;
   List<String> allActivity, allActivityKey;
 
@@ -60,9 +62,13 @@ class _JournalScreenState extends State<JournalScreen> {
     _calendarFormat = CalendarFormat.week;
     _focusedDay = DateTime.now();
     _selectedDay = _focusedDay;
+    items1 = ["Chơi cờ vua", "Luyện tập code", "Cày game"];
     toDos = [
       ToDo(check: false, task: "Nothing", taskKey: 'None'),
     ];
+
+    items = [];
+    dataMap = {"Skip": 500, "Done": 322, "Fail": 112};
     allActivity = ["Nothing"];
     allActivityKey = ['None'];
     loadGold();
@@ -95,8 +101,13 @@ class _JournalScreenState extends State<JournalScreen> {
         setState(() {
           StaticData.Vang = database[0]['VANG'];
         });
+        print('vang' + database[0]['VANG'].toString());
+      } else {
+        print('bug1');
+        return;
       }
-    }
+    } else
+      print('bug2');
   }
 
   Future<void> getDoneTask() async {
@@ -104,6 +115,7 @@ class _JournalScreenState extends State<JournalScreen> {
     int selectedDay = dateTimeToInt(_selectedDay);
     database = await dbHelper.rawQuery(
         ''' select * from MUCTIEU where MAMUCTIEU in (select MAMUCTIEU from THONGKE where NGAYHOANTHANH=$selectedDay) and MANGUOIDUNG='$userID' ''');
+    print('Done task length ${database.length}');
     if (database.length == 0) {
       if (this.mounted) {
         setState(() {
@@ -165,6 +177,7 @@ class _JournalScreenState extends State<JournalScreen> {
           int val = int.parse(database[i]['KHOANGTHOIGIAN'].toString());
           Duration diff = start.difference(_selectedDay);
           if (diff.inDays % val == 0) {
+            print(val);
             if (this.mounted) {
               setState(() {
                 doneList.add(database[i]['TENMUCTIEU']);
@@ -371,6 +384,7 @@ class _JournalScreenState extends State<JournalScreen> {
           int val = int.parse(database[i]['KHOANGTHOIGIAN'].toString());
           Duration diff = start.difference(_selectedDay);
           if (diff.inDays % val == 0) {
+            print(val);
             if (this.mounted) {
               setState(() {
                 toDos.add(
@@ -396,6 +410,9 @@ class _JournalScreenState extends State<JournalScreen> {
     ];
     // Flexible Handler
     for (int i = 0; i < flexibleData.length; i++) {
+      // Rắc rối nhất là ở đây
+      // Lấy số lần đã làm trong tuần
+
       // Lấy thứ của ngày hiện tại
       String day = DateFormat('EEEE').format(_selectedDay);
       int indexOfDay = daysofWeek.indexOf(day);
@@ -407,6 +424,7 @@ class _JournalScreenState extends State<JournalScreen> {
       // Lấy từ đầu tuần tới cuối tuần của cái bảng thống kê để coi thử làm đc bao nhiêu lần rồi
       List<Map<String, dynamic>> data = await dbHelper.rawQuery(
           '''select count(*) as SOLAN from THONGKE where NGAYHOANTHANH>=$startOfWeek and NGAYHOANTHANH<=$endOfWeek and MAMUCTIEU='$key' ''');
+      print(data.toString());
       int count = 0;
       if (data.length == 0) {
         count = 0;
@@ -476,6 +494,7 @@ class _JournalScreenState extends State<JournalScreen> {
                       'NGAYHOANTHANH': dateTimeToInt(_selectedDay)
                     };
                     final id = await dbHelper.insert('THONGKE', row);
+                    print('inserted row id: $id');
                     getToDoList();
                     getDoneTask();
                   },
@@ -590,7 +609,7 @@ class _JournalScreenState extends State<JournalScreen> {
                 child:
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Text(
-                    "All activity",
+                    "All activities",
                     style: TextStyle(color: Colors.white, fontSize: 22),
                   ),
                 ]),
@@ -921,6 +940,14 @@ class _JournalScreenState extends State<JournalScreen> {
                   setState(() {
                     _selectedDay = selectedDay;
                     _focusedDay = focusedDay;
+                    if (_selectedDay == DateTime.utc(2021, 4, 25)) {
+                      setState(() {
+                        this.items = items1;
+                      });
+                    } else
+                      setState(() {
+                        this.items = [];
+                      });
                   });
                 }
 
@@ -949,6 +976,7 @@ class _JournalScreenState extends State<JournalScreen> {
                     : Colors.blueGrey[700],
               ),
             ),
+
             // Đây là các dòng chỉnh cái header ở trên của cái lịch
             headerStyle: HeaderStyle(
               decoration: BoxDecoration(
@@ -1059,6 +1087,7 @@ class _JournalScreenState extends State<JournalScreen> {
 
   Future<void> achiveNotification() async {
     int level = await getCurrentDoneLevel();
+    print('currentDoneLevel $level');
     if (level == 4) {
       if (this.mounted)
         setState(() {
@@ -1079,6 +1108,7 @@ class _JournalScreenState extends State<JournalScreen> {
 
     int levelNow = (done * 1.0 / targetToReach).floor();
     int achivedLevel = await getCurrentActivityLevel();
+    print('levelNow $levelNow');
     if (levelNow > achivedLevel) {
       if (this.mounted)
         setState(() {
@@ -1260,7 +1290,7 @@ class _JournalScreenState extends State<JournalScreen> {
                 width: 20,
               ),
               Text(
-                'All Activity',
+                'All Activities',
                 style: TextStyle(
                     fontSize: 22,
                     color: (!StaticData.isDarkMode)
