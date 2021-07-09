@@ -249,6 +249,21 @@ class _EditActivityState extends State<EditActivity> {
                                               ? Colors.blue
                                               : Colors.grey[500],
                                       width: 5),
+                                  // top: BorderSide(
+                                  //     color: !checkDay[index]
+                                  //         ? (!StaticData.isDarkMode)?Colors.blue:Colors.grey[700]
+                                  //         : (!StaticData.isDarkMode)?Colors.grey[200]:Colors.grey[500],
+                                  //     width: 1),
+                                  // right: BorderSide(
+                                  //     color: !checkDay[index]
+                                  //         ? (!StaticData.isDarkMode)?Colors.blue:Colors.grey[700]
+                                  //         : (!StaticData.isDarkMode)?Colors.grey[200]:Colors.grey[500],
+                                  //     width: 1),
+                                  // left: BorderSide(
+                                  //     color: !checkDay[index]
+                                  //         ? (!StaticData.isDarkMode)?Colors.blue:Colors.grey[700]
+                                  //         : (!StaticData.isDarkMode)?Colors.grey[200]:Colors.grey[500],
+                                  //     width: (index == 0) ? 1 : 0)
                                 ),
                               ),
                               child: Center(
@@ -332,7 +347,7 @@ class _EditActivityState extends State<EditActivity> {
           builder: (BuildContext context) => AlertDialog(
                 title: Text("Message"),
                 content:
-                    Text("Are you sure you don't want to add description ?"),
+                    Text("Are you sure you don't want to add description?"),
                 actions: [
                   TextButton(
                     onPressed: () {
@@ -376,7 +391,7 @@ class _EditActivityState extends State<EditActivity> {
               builder: (BuildContext context) => AlertDialog(
                     title: Text("Message"),
                     content: Text(
-                        "Days per week can't greater than 7 or less than 1"),
+                        "Days per week can't be greater than 7 or less than 1"),
                     actions: [
                       TextButton(
                         onPressed: () {
@@ -411,7 +426,7 @@ class _EditActivityState extends State<EditActivity> {
       } else {
         int days = int.parse(getRepeatingDay.text);
         if (days < 1) {
-          await showDialog(
+          showDialog(
               context: context,
               builder: (BuildContext context) => AlertDialog(
                     title: Text("Message"),
@@ -419,7 +434,7 @@ class _EditActivityState extends State<EditActivity> {
                     actions: [
                       TextButton(
                         onPressed: () {
-                          Navigator.pop(context, false);
+                          Navigator.pop(context);
                         },
                         child: Text("OK"),
                       )
@@ -500,7 +515,9 @@ class _EditActivityState extends State<EditActivity> {
   }
 
   Future<void> getAllGroup() async {
-    List<Map<String, dynamic>> database = await dbHelper.query('NHOMMUCTIEU');
+    String userID = StaticData.userID;
+    List<Map<String, dynamic>> database = await dbHelper
+        .rawQuery('''select * from NHOMMUCTIEU where MANGUOIDUNG='$userID' ''');
     if (this.mounted) {
       setState(() {
         text2 = database.toString();
@@ -532,9 +549,21 @@ class _EditActivityState extends State<EditActivity> {
     }
   }
 
+  Future<bool> checkUniqueName(String name) async {
+    String userID = StaticData.userID;
+    List<Map<String, dynamic>> database = await dbHelper
+        .rawQuery('''select * from NHOMMUCTIEU where MANGUOIDUNG='$userID' ''');
+    for (int i = 0; i < database.length; i++) {
+      if (database[i]['TENNHOM'] == name) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    OutlineInputBorder borderStyle = OutlineInputBorder(
+    OutlineInputBorder k = OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(4)),
       borderSide: BorderSide(
           width: 1,
@@ -597,11 +626,11 @@ class _EditActivityState extends State<EditActivity> {
                                   ? Colors.black
                                   : Colors.grey[400],
                               fontSize: 18),
-                          focusedBorder: borderStyle,
-                          disabledBorder: borderStyle,
-                          enabledBorder: borderStyle,
-                          errorBorder: borderStyle,
-                          focusedErrorBorder: borderStyle,
+                          focusedBorder: k,
+                          disabledBorder: k,
+                          enabledBorder: k,
+                          errorBorder: k,
+                          focusedErrorBorder: k,
                         ),
                         // style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
@@ -611,14 +640,15 @@ class _EditActivityState extends State<EditActivity> {
                       // Description
                       TextField(
                         controller: getDescription,
+                        textInputAction: TextInputAction.done,
                         decoration: InputDecoration(
                             isDense: true,
                             contentPadding: EdgeInsets.all(8),
-                            focusedBorder: borderStyle,
-                            disabledBorder: borderStyle,
-                            enabledBorder: borderStyle,
-                            errorBorder: borderStyle,
-                            focusedErrorBorder: borderStyle,
+                            focusedBorder: k,
+                            disabledBorder: k,
+                            enabledBorder: k,
+                            errorBorder: k,
+                            focusedErrorBorder: k,
                             border: OutlineInputBorder(),
                             labelText: 'Description (optional)',
                             labelStyle: TextStyle(
@@ -725,6 +755,7 @@ class _EditActivityState extends State<EditActivity> {
                         builder: (_) => AddGroup(),
                       );
                       await getAllGroup();
+                      print(l);
                       if (l != null && l == true) {
                         if (this.mounted) {
                           setState(() {
