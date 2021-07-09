@@ -524,11 +524,6 @@ class _EditActivityState extends State<EditActivity> {
       });
     } else
       return;
-
-    // setState(() {
-    //   allGroup = [];
-    //   allGroupKey = [];
-    // });
     while (allGroup.length > 1) {
       allGroup.removeLast();
       allGroupKey.removeLast();
