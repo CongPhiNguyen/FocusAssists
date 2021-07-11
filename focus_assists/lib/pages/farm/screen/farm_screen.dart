@@ -56,13 +56,13 @@ class _FarmScreenState extends State<FarmScreen> {
           increaseLevel(index);
         },
         longPress: (){
-          deletePokemon(context, index);
+          sellPokemon(context, index);
         },
       ),
     );
   }
 
-  void deletePokemon(context,int index){
+  void sellPokemon(context,int index){
     int rank = 1;
     if(StaticData.PokemonUsers[index].Level >= 24 && StaticData.PokemonUsers[index].Level < 50 && StaticData.PokemonUsers[index].rareColor == Colors.redAccent)
     {
