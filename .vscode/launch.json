@@ -5,14 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "focus_assist",
-            "cwd": "focus_assist",
+            "name": "focus_assists",
+            "cwd": "focus_assists",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "focus_assist (profile mode)",
-            "cwd": "focus_assist",
+            "name": "focus_assists (profile mode)",
+            "cwd": "focus_assists",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
