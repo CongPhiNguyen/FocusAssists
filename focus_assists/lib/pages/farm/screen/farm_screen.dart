@@ -75,9 +75,9 @@ class _FarmScreenState extends State<FarmScreen> {
 
     Alert(
         context: context,
-        title: 'DELETE POKEMON',
+        title: 'sell POKEMON',
         closeIcon: Icon(Icons.auto_awesome),
-        desc: "Do you want to delete this pokemon?",
+        desc: "Do you want to SELL this pokemon?",
         content: Column(
           children: [
             Center(
