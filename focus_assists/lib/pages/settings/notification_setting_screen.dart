@@ -281,6 +281,7 @@ class _NotificationSettingScreenState extends State<NotificationSettingScreen> {
               }
             ),
           ),
+          Divider(height:0, thickness: 1,),
           ListTile(
             enabled: isEveningNotification,
             // tileColor: Theme.of(context).scaffoldBackgroundColor,
