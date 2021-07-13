@@ -20,16 +20,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f1932aaf-256a-4071-8857-a9dd332de36f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/FocusAssists.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/FocusAssists.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/focus_assists/lib/pages/settings/account_setting_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/focus_assists/lib/pages/settings/account_setting_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/focus_assists/lib/pages/settings/notification_setting_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/focus_assists/lib/pages/settings/notification_setting_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
@@ -49,7 +47,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="dart.analysis.tool.window.visible" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../merge/FocusAssists" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
@@ -82,10 +80,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="358" y="151" key="FileChooserDialogImpl" timestamp="1626213305416">
+    <state x="358" y="151" key="FileChooserDialogImpl" timestamp="1626214534322">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="358" y="151" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1626213305416" />
+    <state x="358" y="151" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1626214534322" />
     <state x="87" y="0" key="SettingsEditor" timestamp="1626213481245">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
