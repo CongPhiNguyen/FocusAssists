@@ -725,7 +725,7 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
                 //   height: 1,
                 //   color: Colors.blue,
                 // ),
-                SizedBox(height: 5),
+
                 TextField(
                   controller: confirmNewPasswordEditingController,
                   obscureText: true,
