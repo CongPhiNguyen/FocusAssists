@@ -288,7 +288,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                               _controlIcon = Icons.pause;           
                               //started? (start()): null;
                               if (started) {
-                                start();
+                                //start();
                                 StaticData.gifcontroller.repeat(min:0,max:99,period:Duration(milliseconds: 3000));
                               } else 
                               started = false;
