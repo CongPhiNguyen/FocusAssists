@@ -625,7 +625,6 @@ class _EditActivityState extends State<EditActivity> {
                           errorBorder: k,
                           focusedErrorBorder: k,
                         ),
-                        // style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
                       SizedBox(
                         height: 10,
@@ -650,7 +649,6 @@ class _EditActivityState extends State<EditActivity> {
                                     : Colors.grey[400],
                                 fontSize: 18)),
                         maxLines: 3,
-                        // style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
                       SizedBox(
                         height: 10,
@@ -697,7 +695,6 @@ class _EditActivityState extends State<EditActivity> {
               height: 10,
               color: (!StaticData.isDarkMode) ? Colors.black : Colors.grey,
             ),
-            //Chọn group của các activity
             Center(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -748,7 +745,6 @@ class _EditActivityState extends State<EditActivity> {
                         builder: (_) => AddGroup(),
                       );
                       await getAllGroup();
-                      print(l);
                       if (l != null && l == true) {
                         if (this.mounted) {
                           setState(() {
