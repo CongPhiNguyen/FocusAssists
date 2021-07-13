@@ -282,6 +282,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                             if(_timerIsRunning) {
                                //stoped ? null : stop();
                                //showAlertDialog(context);
+                               
                                showDialogResetTimer(context, "Reset timer?");
                             }
                             else {    
@@ -289,8 +290,10 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                               //started? (start()): null;
                               if (started) {
                                 start();
+
                                 StaticData.gifcontroller.repeat(min:0,max:99,period:Duration(milliseconds: 3000));
                               } else 
+                              
                               started = false;
                             }
                             _timerIsRunning =! _timerIsRunning;

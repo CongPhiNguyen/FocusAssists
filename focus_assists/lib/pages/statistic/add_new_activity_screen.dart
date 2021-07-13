@@ -1,9 +1,8 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:focus_assist/classes/Data.dart';
 import 'package:focus_assist/classes/DbProvider.dart';
-import 'dart:math';
-
 import 'package:focus_assist/pages/statistic/add_new_group_dialog.dart';
 
 class AddNew extends StatefulWidget {
@@ -156,8 +155,6 @@ class _AddNewState extends State<AddNew> {
                             width: 48.5,
                             decoration: BoxDecoration(
                               color: checkDay[index]
-                                  // ? Color(0xff8A2BE2)
-                                  // : Color(0xffF0FFF0),
                                   ? (!StaticData.isDarkMode)
                                       ? Colors.grey[50]
                                       : Colors.grey[700]
@@ -174,21 +171,6 @@ class _AddNewState extends State<AddNew> {
                                             ? Colors.blue
                                             : Colors.grey[500],
                                     width: 5),
-                                // top: BorderSide(
-                                //     color: !checkDay[index]
-                                //         ? (!StaticData.isDarkMode)?Colors.blue:Colors.grey[700]
-                                //         : (!StaticData.isDarkMode)?Colors.grey[200]:Colors.grey[500],
-                                //     width: 1),
-                                // right: BorderSide(
-                                //     color: !checkDay[index]
-                                //         ? (!StaticData.isDarkMode)?Colors.blue:Colors.grey[700]
-                                //         : (!StaticData.isDarkMode)?Colors.grey[200]:Colors.grey[500],
-                                //     width: 1),
-                                // left: BorderSide(
-                                //     color: !checkDay[index]
-                                //         ? (!StaticData.isDarkMode)?Colors.blue:Colors.grey[700]
-                                //         : (!StaticData.isDarkMode)?Colors.grey[200]:Colors.grey[500],
-                                //     width: (index == 0) ? 1 : 0)
                               ),
                             ),
                             child: Center(
@@ -196,8 +178,6 @@ class _AddNewState extends State<AddNew> {
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: !checkDay[index]
-                                        // ? Color(0xff8A2BE2)
-                                        // : Color(0xffF0FFF0))
                                         ? Colors.black
                                         : Colors.black,
                                   )),
@@ -274,30 +254,6 @@ class _AddNewState extends State<AddNew> {
               ));
       return false;
     }
-    // Nhập desciption(không bắt buộc)
-    // if (getDescription.text == null || getDescription.text.length < 1) {
-    //   return await showDialog(
-    //       context: context,
-    //       builder: (BuildContext context) => AlertDialog(
-    //             title: Text("Confirmation"),
-    //             content:
-    //                 Text("Are you sure you don't want to add description?"),
-    //             actions: [
-    //               TextButton(
-    //                 onPressed: () {
-    //                   Navigator.pop(context, false);
-    //                 },
-    //                 child: Text("No"),
-    //               ),
-    //               TextButton(
-    //                 onPressed: () {
-    //                   Navigator.pop(context, true);
-    //                 },
-    //                 child: Text("Yes"),
-    //               )
-    //             ],
-    //           ));
-    // }
     if (getDescription.text == null || getDescription.text.length < 1) {
       bool k = await showDialog(
           context: context,
@@ -349,7 +305,7 @@ class _AddNewState extends State<AddNew> {
               builder: (BuildContext context) => AlertDialog(
                     title: Text("Message"),
                     content: Text(
-                        "Days per week can't greater than 7 or less than 1"),
+                        "Days per week can't be greater than 7 or less than 1"),
                     actions: [
                       TextButton(
                         onPressed: () {
@@ -468,7 +424,6 @@ class _AddNewState extends State<AddNew> {
       return;
 
     final id = await dbHelper.insert('MUCTIEU', row);
-    print('inserted row id: $id');
   }
 
   Future<void> getAllGroup() async {
@@ -481,11 +436,6 @@ class _AddNewState extends State<AddNew> {
       });
     } else
       return;
-
-    // setState(() {
-    //   allGroup = [];
-    //   allGroupKey = [];
-    // });
     while (allGroup.length > 1) {
       allGroup.removeLast();
       allGroupKey.removeLast();
@@ -613,6 +563,7 @@ class _AddNewState extends State<AddNew> {
                       // Description
                       TextField(
                         controller: getDescription,
+                        textInputAction: TextInputAction.done,
                         decoration: InputDecoration(
                             isDense: true,
                             contentPadding: EdgeInsets.all(8),
@@ -735,7 +686,6 @@ class _AddNewState extends State<AddNew> {
                         builder: (_) => AddGroup(),
                       );
                       await getAllGroup();
-                      print(l);
                       if (l != null && l == true) {
                         if (this.mounted) {
                           setState(() {
@@ -807,74 +757,5 @@ class _AddNewState extends State<AddNew> {
             //debugWidget(),
           ],
         ));
-  }
-
-  Widget debugWidget() {
-    return Column(
-      children: [
-        Text(StaticData.userID == null ? "NGUOIDUNG" : StaticData.userID),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(text, style: TextStyle(fontSize: 30)),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-              onPressed: () {
-                getAllGroup();
-              },
-              child: Text(text2, style: TextStyle(fontSize: 30))),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-              onPressed: () async {
-                List<Map<String, dynamic>> data = await dbHelper
-                    .rawQuery('''select * from THONGTINNGUOIDUNG''');
-                if (this.mounted) {
-                  setState(() {
-                    text3 = data.toString();
-                  });
-                } else
-                  return;
-              },
-              child: Text(text3, style: TextStyle(fontSize: 30))),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-              onPressed: () async {
-                // Thêm người dùng và bảng thông tin người dùng vào database
-                Map<String, dynamic> row = {'MANGUOIDUNG': 'NGUOIDUNG'};
-                final id = await dbHelper.insert('NGUOIDUNG', row);
-                print('inserted row NGUOIDUNG id: $id');
-                row = {'MANGUOIDUNG': 'NGUOIDUNG', 'VANG': 0};
-                final id2 = await dbHelper.insert('THONGTINNGUOIDUNG', row);
-                print('inserted THONGTINNGUOIDUNG row id: $id2');
-              },
-              child: Text(text4, style: TextStyle(fontSize: 30))),
-        ),
-        TextButton(
-            onPressed: () {
-              dbHelper.rawQuery('''delete from NHOMMUCTIEU''');
-            },
-            child: Text("DELETE NHOMMUCTIEU", style: TextStyle(fontSize: 30))),
-        TextButton(
-            onPressed: () {
-              dbHelper.rawQuery('''delete from MUCTIEU''');
-            },
-            child: Text("DELETE MUCTIEU", style: TextStyle(fontSize: 30))),
-        TextButton(
-            onPressed: () {
-              dbHelper.rawQuery('''delete from THANHTUU''');
-              dbHelper.rawQuery('''delete from THANHTUUNGUOIDUNG''');
-            },
-            child: Text("DELETE THANHTUU", style: TextStyle(fontSize: 30))),
-        Text(
-          allGroup.toString(),
-          style: TextStyle(fontSize: 20),
-        )
-      ],
-    );
   }
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:focus_assist/pages/statistic//edit_group_dialog.dart';
 import 'package:focus_assist/pages/statistic//list_of_achivement_screen.dart';
 import 'package:focus_assist/pages/statistic//view_activity_screen.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:focus_assist/pages/statistic//add_new_activity_screen.dart';
 import 'package:focus_assist/pages/statistic//add_new_group_dialog.dart';
 import 'package:focus_assist/classes/Data.dart';
 import 'package:focus_assist/classes/DbProvider.dart';
-import 'package:intl/intl.dart';
 
 class ToDo {
   bool check;
@@ -101,13 +101,10 @@ class _JournalScreenState extends State<JournalScreen> {
         setState(() {
           StaticData.Vang = database[0]['VANG'];
         });
-        print('vang' + database[0]['VANG'].toString());
       } else {
-        print('bug1');
         return;
       }
-    } else
-      print('bug2');
+    }
   }
 
   Future<void> getDoneTask() async {
@@ -115,7 +112,6 @@ class _JournalScreenState extends State<JournalScreen> {
     int selectedDay = dateTimeToInt(_selectedDay);
     database = await dbHelper.rawQuery(
         ''' select * from MUCTIEU where MAMUCTIEU in (select MAMUCTIEU from THONGKE where NGAYHOANTHANH=$selectedDay) and MANGUOIDUNG='$userID' ''');
-    print('Done task length ${database.length}');
     if (database.length == 0) {
       if (this.mounted) {
         setState(() {
@@ -177,7 +173,6 @@ class _JournalScreenState extends State<JournalScreen> {
           int val = int.parse(database[i]['KHOANGTHOIGIAN'].toString());
           Duration diff = start.difference(_selectedDay);
           if (diff.inDays % val == 0) {
-            print(val);
             if (this.mounted) {
               setState(() {
                 doneList.add(database[i]['TENMUCTIEU']);
@@ -363,7 +358,6 @@ class _JournalScreenState extends State<JournalScreen> {
         }
         if (database[i]['LOAIHINH'] == 'Fixed') {
           String h = database[i]['CACNGAY'].toString();
-          // Xử lý vì chuyển từ int nên có thể không đủ 7 chữ số
           while (h.length < 7) {
             h = '0' + h;
           }
@@ -384,7 +378,6 @@ class _JournalScreenState extends State<JournalScreen> {
           int val = int.parse(database[i]['KHOANGTHOIGIAN'].toString());
           Duration diff = start.difference(_selectedDay);
           if (diff.inDays % val == 0) {
-            print(val);
             if (this.mounted) {
               setState(() {
                 toDos.add(
