@@ -44,7 +44,6 @@ class _ViewActivityState extends State<ViewActivity> {
   @override
   void initState() {
     super.initState();
-    print('view_screen init');
     des = '';
     database = [];
     name = widget.activityName;
@@ -59,7 +58,6 @@ class _ViewActivityState extends State<ViewActivity> {
     _selectedDateTime = DateTime.now();
     _targetedDateTime = DateTime.now();
     markDays();
-    print('end view_screen init');
   }
 
   int dateTimeToInt(DateTime dateTime) {
@@ -94,7 +92,6 @@ class _ViewActivityState extends State<ViewActivity> {
     }
 
     // Lấy các ngày đã làm
-    print('startTime: $startTime');
     int date = dateTimeToInt(startTime);
     List<Map<String, dynamic>> data = await dbHelper.rawQuery(
         '''select * from THONGKE where MAMUCTIEU='$key' and NGAYHOANTHANH<=$date ''');
@@ -135,7 +132,6 @@ class _ViewActivityState extends State<ViewActivity> {
         // Xử lý vì chuyển từ int nên có thể không đủ 7 chữ số
         while (h.length < 7) {
           h = '0' + h;
-          print('h: $h');
         }
         int x = 0;
         for (int day = database[0]['NGAYBATDAU'];
@@ -285,7 +281,6 @@ class _ViewActivityState extends State<ViewActivity> {
                 timesByWeek.add(1);
               else {
                 timesByWeek.add(0);
-                print('tempMiss: $tempMiss');
                 for (int i = 0; i < tempMiss.length; i++) {
                   listMissDay.add(intToDateTime(tempMiss[i]));
                 }
