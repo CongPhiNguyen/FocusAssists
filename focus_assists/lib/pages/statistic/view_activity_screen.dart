@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:focus_assist/classes/Data.dart';
 import 'package:focus_assist/pages/statistic/edit_activity_screen.dart';
-import 'package:pie_chart/pie_chart.dart';
+
 import 'package:focus_assist/classes/DbProvider.dart';
-import 'package:intl/intl.dart';
+
+import 'package:pie_chart/pie_chart.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
-
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
     show CalendarCarousel;
 
@@ -259,8 +260,6 @@ class _ViewActivityState extends State<ViewActivity> {
               listMissDay.add(intToDateTime(tempMiss[i]));
             }
           }
-
-          print(timesByWeek);
           int changeWeek = 0;
           count = 0;
           tempMiss = [];
