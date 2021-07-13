@@ -965,7 +965,10 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
 
   _deleteFromTableNGUOIDUNG() async {
     Database db = await DbProvider.instance.database;
-
+    await db.execute('''
+        DELETE FROM NGUOIDUNG
+        WHERE MANGUOIDUNG = '${StaticData.userID}'
+        ''');
   }
 
   _deleteFromTableTHANHTUUNGUOIDUNG() async {
