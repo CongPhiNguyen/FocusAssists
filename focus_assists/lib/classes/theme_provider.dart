@@ -80,7 +80,7 @@ class MyThemes {
         color: Colors.black87,
       ),
       iconTheme: IconThemeData(
-        color: Colors.black,
+        color: Colors.black87,
       ),
       actionsIconTheme: IconThemeData(
         color: Colors.black87,
