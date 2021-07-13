@@ -1,8 +1,8 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:focus_assist/classes/Data.dart';
 import 'package:focus_assist/classes/DbProvider.dart';
-import 'dart:math';
 import 'package:focus_assist/pages/statistic/add_new_group_dialog.dart';
 
 class EditActivity extends StatefulWidget {
@@ -38,6 +38,7 @@ class _EditActivityState extends State<EditActivity> {
   String dropDownGroup;
   bool newGroup;
   bool isFailed = false;
+
   @override
   void initState() {
     newGroup = false;
@@ -340,7 +341,6 @@ class _EditActivityState extends State<EditActivity> {
               ));
       return false;
     }
-    // Nhập desciption(không bắt buộc)
     if (getDescription.text == null || getDescription.text.length < 1) {
       return await showDialog(
           context: context,
@@ -364,8 +364,6 @@ class _EditActivityState extends State<EditActivity> {
                 ],
               ));
     }
-
-    // Trường hợp nhập sai của Flexible
     if (dropDownValue == 'Flexible') {
       if (getDayPerWeek.text.length < 1 || getDayPerWeek.text == null) {
         showDialog(
@@ -627,7 +625,6 @@ class _EditActivityState extends State<EditActivity> {
                           errorBorder: k,
                           focusedErrorBorder: k,
                         ),
-                        // style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
                       SizedBox(
                         height: 10,
@@ -652,7 +649,6 @@ class _EditActivityState extends State<EditActivity> {
                                     : Colors.grey[400],
                                 fontSize: 18)),
                         maxLines: 3,
-                        // style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
                       SizedBox(
                         height: 10,
@@ -699,7 +695,6 @@ class _EditActivityState extends State<EditActivity> {
               height: 10,
               color: (!StaticData.isDarkMode) ? Colors.black : Colors.grey,
             ),
-            //Chọn group của các activity
             Center(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -750,7 +745,6 @@ class _EditActivityState extends State<EditActivity> {
                         builder: (_) => AddGroup(),
                       );
                       await getAllGroup();
-                      print(l);
                       if (l != null && l == true) {
                         if (this.mounted) {
                           setState(() {

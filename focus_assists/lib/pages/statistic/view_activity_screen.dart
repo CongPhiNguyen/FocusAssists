@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:focus_assist/classes/Data.dart';
 import 'package:focus_assist/pages/statistic/edit_activity_screen.dart';
-import 'package:pie_chart/pie_chart.dart';
+
 import 'package:focus_assist/classes/DbProvider.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
-    show CalendarCarousel;
+
+import 'package:pie_chart/pie_chart.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
+import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
+    show CalendarCarousel;
 
 class ViewActivity extends StatefulWidget {
   final String activityKey, activityName;
@@ -29,11 +31,9 @@ class _ViewActivityState extends State<ViewActivity> {
   String consecutiveDays;
   String activityStartDay;
   String des;
-  // Các biến dùng để debug
   DateTime startTime;
   String doDays, failDays;
 
-  // Các biến dùng để lưu ngày và mark ngày
   List<DateTime> listDoneDay = [];
   List<DateTime> listMissDay = [];
 
@@ -45,7 +45,6 @@ class _ViewActivityState extends State<ViewActivity> {
   @override
   void initState() {
     super.initState();
-    print('view_screen init');
     des = '';
     database = [];
     name = widget.activityName;
@@ -60,7 +59,6 @@ class _ViewActivityState extends State<ViewActivity> {
     _selectedDateTime = DateTime.now();
     _targetedDateTime = DateTime.now();
     markDays();
-    print('end view_screen init');
   }
 
   int dateTimeToInt(DateTime dateTime) {
@@ -95,7 +93,6 @@ class _ViewActivityState extends State<ViewActivity> {
     }
 
     // Lấy các ngày đã làm
-    print('startTime: $startTime');
     int date = dateTimeToInt(startTime);
     List<Map<String, dynamic>> data = await dbHelper.rawQuery(
         '''select * from THONGKE where MAMUCTIEU='$key' and NGAYHOANTHANH<=$date ''');
@@ -136,10 +133,7 @@ class _ViewActivityState extends State<ViewActivity> {
         // Xử lý vì chuyển từ int nên có thể không đủ 7 chữ số
         while (h.length < 7) {
           h = '0' + h;
-          print('h: $h');
         }
-        print('NGAYBATDAU: ${database[0]['NGAYBATDAU']}');
-        print('startTime int: ${dateTimeToInt(startTime)}');
         int x = 0;
         for (int day = database[0]['NGAYBATDAU'];
             day <= dateTimeToInt(startTime);
@@ -151,7 +145,6 @@ class _ViewActivityState extends State<ViewActivity> {
           indexThu++;
           indexThu %= 7;
         }
-        print('x: $x');
         int doDay = 0, failDay = 0;
         for (int i = 0; i < toDoDays.length; i++) {
           if (doneDay.contains(toDoDays[i])) {
@@ -180,7 +173,6 @@ class _ViewActivityState extends State<ViewActivity> {
         for (int i = toDoDays.length - 1; i >= 0; i--) {
           if (doneDay.contains(toDoDays[i])) {
             conseDays++;
-            //print(toDoDays[i]);
           } else {
             break;
           }
@@ -264,13 +256,10 @@ class _ViewActivityState extends State<ViewActivity> {
             timesByWeek.add(1);
           } else {
             timesByWeek.add(0);
-            print('tempMiss: $tempMiss');
             for (int i = 0; i < tempMiss.length; i++) {
               listMissDay.add(intToDateTime(tempMiss[i]));
             }
           }
-
-          print(timesByWeek);
           int changeWeek = 0;
           count = 0;
           tempMiss = [];
@@ -280,8 +269,6 @@ class _ViewActivityState extends State<ViewActivity> {
               date < dateTimeToInt(startTime);
               date =
                   dateTimeToInt(intToDateTime(date).add(Duration(days: 1)))) {
-            //print('nextWeek');
-            print('date: $date');
             if (doneDay.contains(date))
               count++;
             else
@@ -293,7 +280,6 @@ class _ViewActivityState extends State<ViewActivity> {
                 timesByWeek.add(1);
               else {
                 timesByWeek.add(0);
-                print('tempMiss: $tempMiss');
                 for (int i = 0; i < tempMiss.length; i++) {
                   listMissDay.add(intToDateTime(tempMiss[i]));
                 }

@@ -26,7 +26,6 @@ class _EditGroupState extends State<EditGroup> {
     isUnique = true;
   }
 
-//Hàm tạo string random để Tạo khoá
   String getRandomString(int len) {
     var r = Random();
     return String.fromCharCodes(
@@ -41,7 +40,6 @@ class _EditGroupState extends State<EditGroup> {
       'MANGUOIDUNG': StaticData.userID,
     };
     final id = await dbHelper.insert('NHOMMUCTIEU', row);
-    print('inserted row id: $id');
   }
 
   void editGroup() async {
