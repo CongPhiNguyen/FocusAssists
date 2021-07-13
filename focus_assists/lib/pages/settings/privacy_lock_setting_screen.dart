@@ -42,7 +42,7 @@ class _PrivacyLockSettingScreenState extends State<PrivacyLockSettingScreen> {
       ),
       body: ListView(
         children: <Widget>[
-          SizedBox(height: 5.0),
+
           ListTile(
             onTap: () {
               setState(() {

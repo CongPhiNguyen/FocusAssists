@@ -16,7 +16,6 @@ class NotificationSettingScreen extends StatefulWidget {
 }
 
 class _NotificationSettingScreenState extends State<NotificationSettingScreen> {
-  //FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   bool isNotificationOn = true;
   bool isMorningNotification = true;
   bool isEveningNotification = true;
@@ -79,15 +78,6 @@ class _NotificationSettingScreenState extends State<NotificationSettingScreen> {
             letterSpacing: 0.5,
           ),
         ),
-        // leading: IconButton(
-        //   onPressed: () {
-        //     Navigator.pop(context);
-        //   },
-        //   icon: Icon(
-        //     Icons.arrow_back,
-        //     // color: Colors.black,
-        //   ),
-        // ),
       ),
       body: ListView(
         children: <Widget>[
