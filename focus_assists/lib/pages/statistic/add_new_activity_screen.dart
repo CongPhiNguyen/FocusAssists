@@ -449,7 +449,6 @@ class _AddNewState extends State<AddNew> {
       return;
 
     final id = await dbHelper.insert('MUCTIEU', row);
-    print('inserted row id: $id');
   }
 
   Future<void> getAllGroup() async {
@@ -712,7 +711,6 @@ class _AddNewState extends State<AddNew> {
                         builder: (_) => AddGroup(),
                       );
                       await getAllGroup();
-                      print(l);
                       if (l != null && l == true) {
                         if (this.mounted) {
                           setState(() {
@@ -824,10 +822,8 @@ class _AddNewState extends State<AddNew> {
                 // Thêm người dùng và bảng thông tin người dùng vào database
                 Map<String, dynamic> row = {'MANGUOIDUNG': 'NGUOIDUNG'};
                 final id = await dbHelper.insert('NGUOIDUNG', row);
-                print('inserted row NGUOIDUNG id: $id');
                 row = {'MANGUOIDUNG': 'NGUOIDUNG', 'VANG': 0};
                 final id2 = await dbHelper.insert('THONGTINNGUOIDUNG', row);
-                print('inserted THONGTINNGUOIDUNG row id: $id2');
               },
               child: Text(text4, style: TextStyle(fontSize: 30))),
         ),
