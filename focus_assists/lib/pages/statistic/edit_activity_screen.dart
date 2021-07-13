@@ -1,8 +1,8 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:focus_assist/classes/Data.dart';
 import 'package:focus_assist/classes/DbProvider.dart';
-import 'dart:math';
 import 'package:focus_assist/pages/statistic/add_new_group_dialog.dart';
 
 class EditActivity extends StatefulWidget {
@@ -340,7 +340,6 @@ class _EditActivityState extends State<EditActivity> {
               ));
       return false;
     }
-    // Nhập desciption(không bắt buộc)
     if (getDescription.text == null || getDescription.text.length < 1) {
       return await showDialog(
           context: context,
@@ -364,8 +363,6 @@ class _EditActivityState extends State<EditActivity> {
                 ],
               ));
     }
-
-    // Trường hợp nhập sai của Flexible
     if (dropDownValue == 'Flexible') {
       if (getDayPerWeek.text.length < 1 || getDayPerWeek.text == null) {
         showDialog(
