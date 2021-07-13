@@ -282,6 +282,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                             if(_timerIsRunning) {
                                //stoped ? null : stop();
                                //showAlertDialog(context);
+                               
                                showDialogResetTimer(context, "Reset timer?");
                             }
                             else {    
