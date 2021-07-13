@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:focus_assist/pages/statistic//edit_group_dialog.dart';
 import 'package:focus_assist/pages/statistic//list_of_achivement_screen.dart';
 import 'package:focus_assist/pages/statistic//view_activity_screen.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:focus_assist/pages/statistic//add_new_activity_screen.dart';
 import 'package:focus_assist/pages/statistic//add_new_group_dialog.dart';
 import 'package:focus_assist/classes/Data.dart';
 import 'package:focus_assist/classes/DbProvider.dart';
-import 'package:intl/intl.dart';
 
 class ToDo {
   bool check;
@@ -358,7 +358,6 @@ class _JournalScreenState extends State<JournalScreen> {
         }
         if (database[i]['LOAIHINH'] == 'Fixed') {
           String h = database[i]['CACNGAY'].toString();
-          // Xử lý vì chuyển từ int nên có thể không đủ 7 chữ số
           while (h.length < 7) {
             h = '0' + h;
           }
