@@ -101,13 +101,10 @@ class _JournalScreenState extends State<JournalScreen> {
         setState(() {
           StaticData.Vang = database[0]['VANG'];
         });
-        print('vang' + database[0]['VANG'].toString());
       } else {
-        print('bug1');
         return;
       }
-    } else
-      print('bug2');
+    }
   }
 
   Future<void> getDoneTask() async {
@@ -115,7 +112,6 @@ class _JournalScreenState extends State<JournalScreen> {
     int selectedDay = dateTimeToInt(_selectedDay);
     database = await dbHelper.rawQuery(
         ''' select * from MUCTIEU where MAMUCTIEU in (select MAMUCTIEU from THONGKE where NGAYHOANTHANH=$selectedDay) and MANGUOIDUNG='$userID' ''');
-    print('Done task length ${database.length}');
     if (database.length == 0) {
       if (this.mounted) {
         setState(() {
@@ -177,7 +173,6 @@ class _JournalScreenState extends State<JournalScreen> {
           int val = int.parse(database[i]['KHOANGTHOIGIAN'].toString());
           Duration diff = start.difference(_selectedDay);
           if (diff.inDays % val == 0) {
-            print(val);
             if (this.mounted) {
               setState(() {
                 doneList.add(database[i]['TENMUCTIEU']);
@@ -384,7 +379,6 @@ class _JournalScreenState extends State<JournalScreen> {
           int val = int.parse(database[i]['KHOANGTHOIGIAN'].toString());
           Duration diff = start.difference(_selectedDay);
           if (diff.inDays % val == 0) {
-            print(val);
             if (this.mounted) {
               setState(() {
                 toDos.add(
