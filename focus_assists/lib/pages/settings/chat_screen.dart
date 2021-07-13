@@ -125,7 +125,10 @@ class ChatScreenState extends State<ChatScreen> {
 
   void getSticker() {
     // Hide keyboard when sticker appear
-
+    focusNode.unfocus();
+    setState(() {
+      isShowSticker = !isShowSticker;
+    });
   }
 
   Future uploadFile() async {
