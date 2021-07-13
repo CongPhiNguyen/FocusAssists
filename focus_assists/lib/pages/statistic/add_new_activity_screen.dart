@@ -156,8 +156,6 @@ class _AddNewState extends State<AddNew> {
                             width: 48.5,
                             decoration: BoxDecoration(
                               color: checkDay[index]
-                                  // ? Color(0xff8A2BE2)
-                                  // : Color(0xffF0FFF0),
                                   ? (!StaticData.isDarkMode)
                                       ? Colors.grey[50]
                                       : Colors.grey[700]
@@ -174,21 +172,6 @@ class _AddNewState extends State<AddNew> {
                                             ? Colors.blue
                                             : Colors.grey[500],
                                     width: 5),
-                                // top: BorderSide(
-                                //     color: !checkDay[index]
-                                //         ? (!StaticData.isDarkMode)?Colors.blue:Colors.grey[700]
-                                //         : (!StaticData.isDarkMode)?Colors.grey[200]:Colors.grey[500],
-                                //     width: 1),
-                                // right: BorderSide(
-                                //     color: !checkDay[index]
-                                //         ? (!StaticData.isDarkMode)?Colors.blue:Colors.grey[700]
-                                //         : (!StaticData.isDarkMode)?Colors.grey[200]:Colors.grey[500],
-                                //     width: 1),
-                                // left: BorderSide(
-                                //     color: !checkDay[index]
-                                //         ? (!StaticData.isDarkMode)?Colors.blue:Colors.grey[700]
-                                //         : (!StaticData.isDarkMode)?Colors.grey[200]:Colors.grey[500],
-                                //     width: (index == 0) ? 1 : 0)
                               ),
                             ),
                             child: Center(
@@ -196,8 +179,6 @@ class _AddNewState extends State<AddNew> {
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: !checkDay[index]
-                                        // ? Color(0xff8A2BE2)
-                                        // : Color(0xffF0FFF0))
                                         ? Colors.black
                                         : Colors.black,
                                   )),
@@ -481,11 +462,6 @@ class _AddNewState extends State<AddNew> {
       });
     } else
       return;
-
-    // setState(() {
-    //   allGroup = [];
-    //   allGroupKey = [];
-    // });
     while (allGroup.length > 1) {
       allGroup.removeLast();
       allGroupKey.removeLast();
