@@ -255,30 +255,6 @@ class _AddNewState extends State<AddNew> {
               ));
       return false;
     }
-    // Nhập desciption(không bắt buộc)
-    // if (getDescription.text == null || getDescription.text.length < 1) {
-    //   return await showDialog(
-    //       context: context,
-    //       builder: (BuildContext context) => AlertDialog(
-    //             title: Text("Confirmation"),
-    //             content:
-    //                 Text("Are you sure you don't want to add description?"),
-    //             actions: [
-    //               TextButton(
-    //                 onPressed: () {
-    //                   Navigator.pop(context, false);
-    //                 },
-    //                 child: Text("No"),
-    //               ),
-    //               TextButton(
-    //                 onPressed: () {
-    //                   Navigator.pop(context, true);
-    //                 },
-    //                 child: Text("Yes"),
-    //               )
-    //             ],
-    //           ));
-    // }
     if (getDescription.text == null || getDescription.text.length < 1) {
       bool k = await showDialog(
           context: context,
@@ -782,72 +758,5 @@ class _AddNewState extends State<AddNew> {
             //debugWidget(),
           ],
         ));
-  }
-
-  Widget debugWidget() {
-    return Column(
-      children: [
-        Text(StaticData.userID == null ? "NGUOIDUNG" : StaticData.userID),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(text, style: TextStyle(fontSize: 30)),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-              onPressed: () {
-                getAllGroup();
-              },
-              child: Text(text2, style: TextStyle(fontSize: 30))),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-              onPressed: () async {
-                List<Map<String, dynamic>> data = await dbHelper
-                    .rawQuery('''select * from THONGTINNGUOIDUNG''');
-                if (this.mounted) {
-                  setState(() {
-                    text3 = data.toString();
-                  });
-                } else
-                  return;
-              },
-              child: Text(text3, style: TextStyle(fontSize: 30))),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-              onPressed: () async {
-                // Thêm người dùng và bảng thông tin người dùng vào database
-                Map<String, dynamic> row = {'MANGUOIDUNG': 'NGUOIDUNG'};
-                final id = await dbHelper.insert('NGUOIDUNG', row);
-                row = {'MANGUOIDUNG': 'NGUOIDUNG', 'VANG': 0};
-                final id2 = await dbHelper.insert('THONGTINNGUOIDUNG', row);
-              },
-              child: Text(text4, style: TextStyle(fontSize: 30))),
-        ),
-        TextButton(
-            onPressed: () {
-              dbHelper.rawQuery('''delete from NHOMMUCTIEU''');
-            },
-            child: Text("DELETE NHOMMUCTIEU", style: TextStyle(fontSize: 30))),
-        TextButton(
-            onPressed: () {
-              dbHelper.rawQuery('''delete from MUCTIEU''');
-            },
-            child: Text("DELETE MUCTIEU", style: TextStyle(fontSize: 30))),
-        TextButton(
-            onPressed: () {
-              dbHelper.rawQuery('''delete from THANHTUU''');
-              dbHelper.rawQuery('''delete from THANHTUUNGUOIDUNG''');
-            },
-            child: Text("DELETE THANHTUU", style: TextStyle(fontSize: 30))),
-        Text(
-          allGroup.toString(),
-          style: TextStyle(fontSize: 20),
-        )
-      ],
-    );
   }
 }
