@@ -47,7 +47,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
     super.initState();
     StaticData.gifcontroller= GifController(vsync: this);
     _controlIcon = Icons.play_arrow;
-    loadGold();
+    //loadGold();
   }
   void loadGold() async {
     String userID = StaticData.userID;
@@ -69,7 +69,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
         //Add vào database
         dbHelper.rawQuery(
             ''' update THONGTINNGUOIDUNG set VANG=$golds where MANGUOIDUNG='${StaticData.userID}' ''');
-        //loadGold();
+        loadGold();
     
   }
   void updateHistories(bool hoanThanh, String duration) async {
