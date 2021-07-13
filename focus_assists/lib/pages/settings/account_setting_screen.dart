@@ -543,9 +543,6 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
     final pickedFile = await ImagePicker().getImage(
       source: ImageSource.camera,
     );
-    // setState(() {
-    //   image = Image.file(File(pickedFile.path));
-    // });
     if (pickedFile == null) {
       print('Null image');
       return;
@@ -562,9 +559,6 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
     final pickedFile = await ImagePicker().getImage(
       source: ImageSource.gallery,
     );
-    // setState(() {
-    //   image = Image.file(File(pickedFile.path));
-    // });
     if (pickedFile == null) {
       print('Null image');
       return;
