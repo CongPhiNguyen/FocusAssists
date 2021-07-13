@@ -38,6 +38,7 @@ class _EditActivityState extends State<EditActivity> {
   String dropDownGroup;
   bool newGroup;
   bool isFailed = false;
+
   @override
   void initState() {
     newGroup = false;
