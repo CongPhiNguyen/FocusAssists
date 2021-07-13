@@ -47,7 +47,6 @@ class _ListAchivementState extends State<ListAchivement> {
     List<Map<String, dynamic>> data = await dbHelper.rawQuery(
         '''select count(*) as SOLAN from THANHTUU t join THANHTUUNGUOIDUNG tn on t.MATHANHTUU=tn.MATHANHTUU where tn.MANGUOIDUNG='$key' and t.VANG=20  ''');
     countDatabaseLevel = data[0]['SOLAN'];
-    print('shit' + countDatabaseLevel.toString());
     return countDatabaseLevel;
   }
 
@@ -165,8 +164,6 @@ class _ListAchivementState extends State<ListAchivement> {
         'MANGUOIDUNG': StaticData.userID
       };
       final id2 = await dbHelper.insert('THANHTUUNGUOIDUNG', row);
-      print('inserted row id: $id2');
-
       int golds = StaticData.Vang += 100;
       //Add vào database
       String userKey = StaticData.userID;
@@ -182,16 +179,13 @@ class _ListAchivementState extends State<ListAchivement> {
         'VANG': 25
       };
       final id = await dbHelper.insert('THANHTUU', row);
-      print('inserted row id: $id');
       row = {
         'MATHANHTUU': 'TT01' + StaticData.userID,
         'MANGUOIDUNG': StaticData.userID
       };
       final id2 = await dbHelper.insert('THANHTUUNGUOIDUNG', row);
-      print('inserted row id: $id2');
 
       int golds = StaticData.Vang += 25;
-      //Add vào database
       String userKey = StaticData.userID;
       dbHelper.rawQuery(
           ''' update THONGTINNGUOIDUNG set VANG=$golds where MANGUOIDUNG='$userKey' ''');
@@ -220,12 +214,9 @@ class _ListAchivementState extends State<ListAchivement> {
       'CAPDO': 1,
       'VANG': 20
     };
-    print('have:$row');
     final id = await dbHelper.insert('THANHTUU', row);
-    print('inserted row id: $id');
     row = {'MATHANHTUU': maThanhTuu, 'MANGUOIDUNG': StaticData.userID};
     final id2 = await dbHelper.insert('THANHTUUNGUOIDUNG', row);
-    print('inserted row id: $id2');
 
     int golds = StaticData.Vang += 20;
     //Add vàng vào database
