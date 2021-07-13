@@ -4,10 +4,11 @@ import 'package:focus_assist/pages/statistic/edit_activity_screen.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:focus_assist/classes/DbProvider.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
-    show CalendarCarousel;
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
+
+import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
+    show CalendarCarousel;
 
 class ViewActivity extends StatefulWidget {
   final String activityKey, activityName;
@@ -29,11 +30,9 @@ class _ViewActivityState extends State<ViewActivity> {
   String consecutiveDays;
   String activityStartDay;
   String des;
-  // Các biến dùng để debug
   DateTime startTime;
   String doDays, failDays;
 
-  // Các biến dùng để lưu ngày và mark ngày
   List<DateTime> listDoneDay = [];
   List<DateTime> listMissDay = [];
 
@@ -138,8 +137,6 @@ class _ViewActivityState extends State<ViewActivity> {
           h = '0' + h;
           print('h: $h');
         }
-        print('NGAYBATDAU: ${database[0]['NGAYBATDAU']}');
-        print('startTime int: ${dateTimeToInt(startTime)}');
         int x = 0;
         for (int day = database[0]['NGAYBATDAU'];
             day <= dateTimeToInt(startTime);
@@ -151,7 +148,6 @@ class _ViewActivityState extends State<ViewActivity> {
           indexThu++;
           indexThu %= 7;
         }
-        print('x: $x');
         int doDay = 0, failDay = 0;
         for (int i = 0; i < toDoDays.length; i++) {
           if (doneDay.contains(toDoDays[i])) {
@@ -180,7 +176,6 @@ class _ViewActivityState extends State<ViewActivity> {
         for (int i = toDoDays.length - 1; i >= 0; i--) {
           if (doneDay.contains(toDoDays[i])) {
             conseDays++;
-            //print(toDoDays[i]);
           } else {
             break;
           }
@@ -264,7 +259,6 @@ class _ViewActivityState extends State<ViewActivity> {
             timesByWeek.add(1);
           } else {
             timesByWeek.add(0);
-            print('tempMiss: $tempMiss');
             for (int i = 0; i < tempMiss.length; i++) {
               listMissDay.add(intToDateTime(tempMiss[i]));
             }
@@ -280,8 +274,6 @@ class _ViewActivityState extends State<ViewActivity> {
               date < dateTimeToInt(startTime);
               date =
                   dateTimeToInt(intToDateTime(date).add(Duration(days: 1)))) {
-            //print('nextWeek');
-            print('date: $date');
             if (doneDay.contains(date))
               count++;
             else
