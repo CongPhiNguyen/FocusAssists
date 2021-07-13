@@ -69,7 +69,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
         //Add vào database
         dbHelper.rawQuery(
             ''' update THONGTINNGUOIDUNG set VANG=$golds where MANGUOIDUNG='${StaticData.userID}' ''');
-        loadGold();
+        //loadGold();
     
   }
   void updateHistories(bool hoanThanh, String duration) async {
