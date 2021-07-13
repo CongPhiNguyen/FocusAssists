@@ -1,6 +1,6 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:focus_assist/classes/DbProvider.dart';
-import 'dart:math';
 import 'package:focus_assist/classes/Data.dart';
 
 class AddGroup extends StatefulWidget {
@@ -122,7 +122,6 @@ class _AddGroupState extends State<AddGroup> {
             Container(
               padding: EdgeInsets.fromLTRB(15, 10, 10, 10),
               decoration: BoxDecoration(
-                  // color: Color(0xffe0e6ee),
                   color: (!StaticData.isDarkMode)
                       ? Colors.grey[200]
                       : Colors.grey[700],
@@ -147,7 +146,6 @@ class _AddGroupState extends State<AddGroup> {
                   });
                   if (k) {
                     AddNewGroup();
-                    // trả về true khi tạo thành công
                     Navigator.pop(context, true);
                   }
                 },
