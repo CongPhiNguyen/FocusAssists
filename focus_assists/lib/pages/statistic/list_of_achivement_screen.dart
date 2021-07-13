@@ -85,7 +85,6 @@ class _ListAchivementState extends State<ListAchivement> {
   Future<void> getCurrentLevel() async {
     int currentDone = await getCurrentDoneLevel();
     int currentActive = await getCurrentActivityLevel();
-    print('currentDone: $currentDone currentActive: $currentActive');
     if (this.mounted) {
       setState(() {
         currentDoneLevel = currentDone;
@@ -140,16 +139,12 @@ class _ListAchivementState extends State<ListAchivement> {
         'CAPDO': 3,
         'VANG': 300
       };
-      print(row);
       final id = await dbHelper.insert('THANHTUU', row);
-      print('inserted row id: $id');
       row = {
         'MATHANHTUU': 'TT03' + StaticData.userID,
         'MANGUOIDUNG': StaticData.userID
       };
       final id2 = await dbHelper.insert('THANHTUUNGUOIDUNG', row);
-      print('inserted row id: $id2');
-
       int golds = StaticData.Vang += 300;
       //Add vào database
       String userKey = StaticData.userID;
@@ -164,9 +159,7 @@ class _ListAchivementState extends State<ListAchivement> {
         'CAPDO': 2,
         'VANG': 100
       };
-      print(row);
       final id = await dbHelper.insert('THANHTUU', row);
-      print('inserted row id: $id');
       row = {
         'MATHANHTUU': 'TT04' + StaticData.userID,
         'MANGUOIDUNG': StaticData.userID
